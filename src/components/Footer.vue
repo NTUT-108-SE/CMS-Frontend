@@ -3,7 +3,12 @@
     <v-col class="text-center" cols="12">
       <span class>
         &copy; {{ new Date().getFullYear() }} —
-        <strong>NTUT-SELAB</strong>
+        <strong>
+          NTUT-SELAB
+          <v-btn text href="https://github.com/NTUT-108-SE" target="_blank">
+            <v-icon>mdi-github-circle</v-icon>
+          </v-btn>
+        </strong>
       </span>
     </v-col>
   </v-footer>

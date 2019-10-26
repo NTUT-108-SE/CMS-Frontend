@@ -2,7 +2,11 @@
   <v-app>
     <Header />
     <v-content>
-      <router-view></router-view>
+      <transition>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
+      </transition>
     </v-content>
     <Footer />
   </v-app>

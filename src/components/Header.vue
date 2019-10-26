@@ -4,12 +4,11 @@
       <span class="font-weight-light">Clinic Management System</span>
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-btn
-      text
-      href="https://github.com/NTUT-108-SE/CMS-Frontend"
-      target="_blank"
-    >
-      <span class="mr-2">Github</span>
+    <v-btn text>
+      <router-link to="/" tag="span">Home</router-link>
+    </v-btn>
+    <v-btn text>
+      <router-link to="About" tag="span">About</router-link>
     </v-btn>
   </v-app-bar>
 </template>
