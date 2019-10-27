@@ -6,7 +6,7 @@
         <strong>
           NTUT-SELAB
           <v-btn text href="https://github.com/NTUT-108-SE" target="_blank">
-            <v-icon>mdi-github-circle</v-icon>
+            <v-icon>mdi-account </v-icon>
           </v-btn>
         </strong>
       </span>
