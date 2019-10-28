@@ -44,6 +44,26 @@ const routes = [
         path: "pill",
         name: "pill",
         component: () => import("@/views/admin/Pill.vue")
+      },
+      {
+        path: "patientmanagement",
+        name: "patientmanagement",
+        component: () => import("@/views/admin/PatientManagement.vue")
+      },
+      {
+        path: "healthrecord",
+        name: "healthrecord",
+        component: () => import("@/views/admin/HealthRecord.vue")
+      },
+      {
+        path: "financial",
+        name: "financial",
+        component: () => import("@/views/admin/Financial.vue")
+      },
+      {
+        path: "onlineregistration",
+        name: "onlineregistration",
+        component: () => import("@/views/admin/OnlineRegistration.vue")
       }
     ]
   },

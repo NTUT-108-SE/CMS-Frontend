@@ -19,20 +19,30 @@
       <v-divider></v-divider>
 
       <v-list>
-        <v-list-item
-          v-for="item in items"
-          :key="item.title"
-          link
-          :to="item.path"
-        >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <v-list-group
+            v-for="item in items"
+            :key="item.title"
+            v-model="item.active"
+          :prepend-icon="item.icon"
+          no-action
+          >
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <v-list-item
+              v-for="subItem in item.items"
+              :key="subItem.title"
+              link
+              :to="subItem.path"
+            >
+            <v-list-item-content>
+              <v-list-item-title v-text="subItem.title"></v-list-item-title>
+            </v-list-item-content>
+            </v-list-item>
+          
+        </v-list-group>
       </v-list>
     </v-navigation-drawer>
 
@@ -87,14 +97,58 @@ export default class Toolbar extends Vue {
   };
   items: Array<Object> = [
     {
-      icon: "mdi-account",
+      icon: "mdi-account-group",
       title: "使用者管理",
-      path: "/admin/account"
+      items: [
+              { title: 'List Item' ,
+                path:  "/admin/account"
+              }
+      ]
+    },
+    {
+      icon: "mdi-account-lock",
+      title: "病人管理",
+      items: [
+              { title: 'List Item' ,
+                path:  "/admin/patientmanagement"
+              }
+      ] 
+    },
+    {
+      icon: "mdi-clipboard-text-outline",
+      title: "病歷管理",
+      items: [
+              { title: 'List Item' ,
+                path:  "/admin/healthrecord"
+              }
+      ] 
+    },
+    {
+      icon: "mdi-plus-network-outline",
+      title: "掛號管理",
+      items: [
+              { title: 'List Item' ,
+                path:  "/admin/onlineregistration"
+              }
+      ] 
     },
     {
       icon: "mdi-pill",
       title: "藥品管理",
-      path: "/admin/pill"
+      items: [
+              { title: 'List Item' ,
+                path:  "/admin/pill"
+              }
+      ] 
+    },
+    {
+      icon: "mdi-receipt",
+      title: "財務管理",
+      items: [
+              { title: 'List Item' ,
+                path:  "/admin/financial"
+              }
+      ] 
     }
   ];
 }
