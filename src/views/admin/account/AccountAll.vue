@@ -7,6 +7,7 @@
                 :items="desserts"
                 :search="search"
                 sort-by="createtime"
+                class="elevation-1"
             >
                 <template v-slot:top>
                     <v-toolbar flat color="white">
@@ -36,7 +37,7 @@
                     </v-icon>
                     <v-icon
                     class="mr-2"
-                    @click="deleteItem(item)"
+                    @click="showItem(item)"
                     >
                     mdi-file-eye-outline
                     </v-icon>
@@ -54,10 +55,10 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component
 export default class Account extends Vue {
-   search: string = '';
+    search: string = '';
     headers: Object = [
         {
-            text: '使用者名稱',
+            text: '使用者帳號',
             align: 'left',
             sortable: false,
             value: 'uesername',
@@ -69,16 +70,38 @@ export default class Account extends Vue {
         { text: '修改時間', value: 'edittime' },
         { text: '操作', value: 'action', sortable: false  },
     ];
-    desserts: object = [
-          {
-            uesername: 'Admin000',
-            name: '軟工開發小組',
-            gender :'男',
-            permission: 'admin',
-            createtime: '2019/10/20',
-            edittime: '2019/10/20',
-            action:'delete'
-          }
-        ] 
+    desserts: object = [] ;
+    created () {
+            this.initialize();
+    };
+    initialize () {
+      this.desserts = [
+        { 
+          uesername : 'admin000',
+          name: '軟體工程-第一組-前端開發小組',
+          gender: '男',
+          permission: 'admin',
+          createtime: '2019/10/20',
+          edittime: '2019/10/20',
+        },
+        { 
+          uesername : 'dctor000',
+          name: '醫生000',
+          gender: '男',
+          permission: 'doctor',
+          createtime: '2019/10/20',
+          edittime: '2019/10/20',
+        },
+        { 
+          uesername : 'employee000',
+          name: '員工000',
+          gender: '女',
+          permission: 'employee',
+          createtime: '2019/10/20',
+          edittime: '2019/10/20',
+        }
+      ]
+    };
+    
 }
 </script>
