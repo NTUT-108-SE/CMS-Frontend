@@ -17,14 +17,12 @@
       </v-list>
 
       <v-divider></v-divider>
-
       <v-list>
         <v-list-group
             v-for="item in items"
             :key="item.title"
-            v-model="item.active"
-          :prepend-icon="item.icon"
-          no-action
+            :prepend-icon="item.icon"
+             no-action
           >
             <template v-slot:activator>
               <v-list-item-content>
@@ -41,6 +39,8 @@
               <v-list-item-title v-text="subItem.title"></v-list-item-title>
             </v-list-item-content>
             </v-list-item>
+            
+           
           
         </v-list-group>
       </v-list>
@@ -60,27 +60,9 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
+      <v-btn icon @click="LoginOut">
+        <v-icon>mdi-exit-to-app </v-icon>
       </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <v-menu left bottom>
-        <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </template>
-
-        <v-list>
-          <v-list-item v-for="n in 5" :key="n" @click="() => {}">
-            <v-list-item-title>Option {{ n }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
     </v-app-bar>
   </div>
 </template>
@@ -91,8 +73,14 @@ import { State, Mutation } from "vuex-class";
 export default class Toolbar extends Vue {
   @State("image", { namespace: "Dashboard" }) image!: String;
   drawer: Boolean = true;
+  LoginOut() {
+    if(confirm("確定要離開CMS系統嗎?"))
+    {
+      this.$router.push('/login');
+    }
+  };
   User: Object = {
-    name: "Sean",
+    name: "Admin",
     url: "https://picsum.photos/1920/1080?random"
   };
   items: Array<Object> = [
@@ -100,55 +88,49 @@ export default class Toolbar extends Vue {
       icon: "mdi-account-group",
       title: "使用者管理",
       items: [
-              { title: 'List Item' ,
-                path:  "/admin/account"
-              }
+        { title: "瀏覽使用者帳戶", path: "/admin/account/accountall"  },
+        { title: "新增使用者帳戶", path: "/admin/account/accounttemp" }
       ]
     },
     {
       icon: "mdi-account-lock",
       title: "病人管理",
       items: [
-              { title: 'List Item' ,
-                path:  "/admin/patientmanagement"
-              }
-      ] 
+        { title: "瀏覽病人", path: "/admin/patientmanagement/patientmanagement"  },
+        { title: "新增病人", path: "/admin/patientmanagement/patientmanagementtemp" }
+      ]
     },
     {
       icon: "mdi-clipboard-text-outline",
       title: "病歷管理",
       items: [
-              { title: 'List Item' ,
-                path:  "/admin/healthrecord"
-              }
-      ] 
+        { title: "瀏覽病歷", path: "/admin/healthrecord/healthrecord"  },
+        { title: "新增病歷", path: "/admin/healthrecord/healthrecordtemp" }
+      ]
     },
     {
       icon: "mdi-plus-network-outline",
       title: "掛號管理",
       items: [
-              { title: 'List Item' ,
-                path:  "/admin/onlineregistration"
-              }
-      ] 
+        { title: "瀏覽掛號", path: "/admin/onlineregistration/onlineregistration"  },
+        { title: "新增掛號", path: "/admin/onlineregistration/onlineregistrationtemp" }
+      ]
     },
     {
       icon: "mdi-pill",
       title: "藥品管理",
       items: [
-              { title: 'List Item' ,
-                path:  "/admin/pill"
-              }
-      ] 
+        { title: "瀏覽藥品", path: "/admin/pill/pill"  },
+        { title: "新增藥品", path: "/admin/pill/pilltemp" }
+      ]
     },
     {
       icon: "mdi-receipt",
       title: "財務管理",
       items: [
-              { title: 'List Item' ,
-                path:  "/admin/financial"
-              }
-      ] 
+        { title: "瀏覽收據", path: "/admin/financial/financial"  },
+        { title: "新增收據", path: "/admin/financial/financialtemp" }
+      ]
     }
   ];
 }

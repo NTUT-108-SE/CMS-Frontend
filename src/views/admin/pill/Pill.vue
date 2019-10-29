@@ -1,7 +1,7 @@
 <template>
   <v-container class="fill-height">
     <v-row justify="center" align="center">
-      <span>This is an account page</span>
+      <span>藥品總顯示</span>
     </v-row>
   </v-container>
 </template>
