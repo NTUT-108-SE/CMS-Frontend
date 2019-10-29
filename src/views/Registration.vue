@@ -2,10 +2,43 @@
   <v-container class="grey lighten-5">
 
     <v-row justify="center">
+      <v-col md="2">
+        <v-card >
+          <v-card-title class="py-2" color="grey">
+            看診資訊
+          </v-card-title>
+
+          <v-divider class="mx-4"></v-divider>
+
+          <v-row>
+            <v-card-text class="py-2 px-6">
+              看診醫生： {{registrationInfo.doctorName}}
+            </v-card-text>
+          </v-row>
+
+          <v-row>
+            <v-card-text class="py-2 px-6">
+              今日掛號人數： {{registrationInfo.totleRegistration}}
+            </v-card-text>
+          </v-row>
+
+          <v-row>
+            <v-card-text class="py-2 px-6 pb-4">
+              目前看診進度： {{registrationInfo.nowRegistration}}
+            </v-card-text>
+          </v-row>
+
+        </v-card>
+      </v-col>
+
       <v-col md="6">
         <v-card>
-          <v-form class="py-3">
+          <v-card-title class="py-2" color="grey">
+              掛號
+            </v-card-title>
 
+            <v-divider class="mx-4"></v-divider>
+          <v-form class="py-3">
             <v-row justify="center">
               <v-col md="6">
               <v-text-field
@@ -119,5 +152,11 @@ export default class Registration extends Vue {
         birthMenu: false,
       }
     };
+    
+  registrationInfo: Object = {
+    doctorName: "黃俊凱",
+    totleRegistration: 87,
+    nowRegistration: 78
+  }
 }
 </script>
