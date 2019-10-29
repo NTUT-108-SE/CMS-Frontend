@@ -33,6 +33,7 @@ const routes = [
   },
   {
     path: "/admin",
+    name: "admin",
     component: () => import("@/views/admin/Layout.vue"),
     children: [
       {
