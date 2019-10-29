@@ -44,9 +44,11 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
+import { Mutation } from "vuex-class";
 
 @Component
 export default class Login extends Vue {
+  @Mutation("User/UserLoaded") userLoaded!: Function;
   private email: string = "";
   private password: string = "";
   onLogin() {
@@ -65,6 +67,7 @@ export default class Login extends Vue {
           position: "top-right",
           duration: 3000
         });
+        this.userLoaded(user);
         this.$router.push({ name: "admin" });
       })
       .catch(data => {
