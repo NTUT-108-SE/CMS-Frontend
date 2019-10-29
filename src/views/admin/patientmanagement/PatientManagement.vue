@@ -1,7 +1,9 @@
 <template>
   <v-container class="fill-height">
     <v-row justify="center" align="center">
-      <span>財務管理子系統(Patient Infomation Management Subsystem) - PIMS</span>
+      <span
+        >病人管理子系統(Patient Infomation Management Subsystem) - PIMS</span
+      >
     </v-row>
   </v-container>
 </template>
