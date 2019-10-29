@@ -15,6 +15,8 @@
                     autofocus
                     label="Login"
                     name="login"
+                    v-model="email"
+                    placeholder="user@example.com"
                     prepend-icon="mdi-account"
                     type="text"
                   ></v-text-field>
@@ -22,6 +24,7 @@
                     id="password"
                     label="Password"
                     name="password"
+                    v-model="password"
                     prepend-icon="mdi-lock"
                     type="password"
                   ></v-text-field>
@@ -29,7 +32,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary">Login</v-btn>
+                <v-btn color="primary" @click.stop="onLogin()">Login</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -43,5 +46,34 @@
 import { Vue, Component } from "vue-property-decorator";
 
 @Component
-export default class Login extends Vue {}
+export default class Login extends Vue {
+  private email: string = "";
+  private password: string = "";
+  onLogin() {
+    this.axios
+      .post(
+        "/login",
+        JSON.stringify({
+          email: this.email,
+          password: this.password
+        })
+      )
+      .then(data => data.data)
+      .then(({ user }) => {
+        this.$toasted.show(`Login success!! Welcom ${user.name}`, {
+          type: "success",
+          position: "top-right",
+          duration: 3000
+        });
+        this.$router.push({ name: "admin" });
+      })
+      .catch(data => {
+        this.$toasted.show(`Login failed!!`, {
+          type: "error",
+          position: "top-right",
+          duration: 3000
+        });
+      });
+  }
+}
 </script>
