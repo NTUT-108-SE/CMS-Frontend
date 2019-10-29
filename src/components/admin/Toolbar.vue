@@ -94,7 +94,7 @@ export default class Toolbar extends Vue {
     },
     {
       icon: "mdi-account-lock",
-      title: "病人管理",
+      title: "病人資訊管理",
       items: [
         { title: "瀏覽病人", path: "/admin/patientmanagement/patientmanagement"  },
         { title: "新增病人", path: "/admin/patientmanagement/patientmanagementtemp" }
