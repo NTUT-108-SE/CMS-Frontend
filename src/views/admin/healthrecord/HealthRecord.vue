@@ -54,8 +54,8 @@ export default class Account extends Vue {
     { text: "姓名", value: "name" },
     { text: "性別", value: "gender" },
     { text: "病情", value: "problem" },
-    { text:"使用藥品",value:"medication"},
-     { text:"照護計畫",value:"careplan"},
+    { text: "使用藥品", value: "medication" },
+    { text: "照護計畫", value: "careplan" },
     { text: "建立時間", value: "createtime" },
     { text: "修改時間", value: "edittime" },
     { text: "操作", value: "action", sortable: false }
@@ -70,9 +70,9 @@ export default class Account extends Vue {
         id: "FXXXXXXXXX",
         name: "王大熊",
         gender: "男",
-        problem:"一般感冒",
-        medication:"普通特效藥",
-        careplan:"先吃普通特效藥，如沒好轉需再回診",
+        problem: "一般感冒",
+        medication: "普通特效藥",
+        careplan: "先吃普通特效藥，如沒好轉需再回診",
         createtime: "2019/10/20",
         edittime: "2019/10/20"
       }
@@ -80,4 +80,3 @@ export default class Account extends Vue {
   }
 }
 </script>
-

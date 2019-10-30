@@ -103,4 +103,3 @@ export default class Account extends Vue {
   permission: Object = ["admin", "doctor", "employee"];
 }
 </script>
-

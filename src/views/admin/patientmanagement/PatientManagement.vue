@@ -54,8 +54,8 @@ export default class Account extends Vue {
     { text: "姓名", value: "name" },
     { text: "性別", value: "gender" },
     { text: "電話", value: "telecom" },
-    { text: "生日", value: "birthDate"},
-    { text: "地址", value: "address"},
+    { text: "生日", value: "birthDate" },
+    { text: "地址", value: "address" },
     { text: "建立時間", value: "createtime" },
     { text: "修改時間", value: "edittime" },
     { text: "操作", value: "action", sortable: false }
@@ -70,9 +70,9 @@ export default class Account extends Vue {
         id: "FXXXXXXXXX",
         name: "王小名",
         gender: "男",
-        telecom:"09XXXXXXXX",
-        birthDate:"2010-05-03",
-        address:"北科大XXXX",
+        telecom: "09XXXXXXXX",
+        birthDate: "2010-05-03",
+        address: "北科大XXXX",
         createtime: "2019/10/20",
         edittime: "2019/10/20"
       },
@@ -80,9 +80,9 @@ export default class Account extends Vue {
         id: "FXXXXXXXXX",
         name: "王小美",
         gender: "女",
-        telecom:"09XXXXXXXX",
-        birthDate:"2010-05-09",
-        address:"北科大XXXX",
+        telecom: "09XXXXXXXX",
+        birthDate: "2010-05-09",
+        address: "北科大XXXX",
         createtime: "2019/10/20",
         edittime: "2019/10/20"
       },
@@ -90,9 +90,9 @@ export default class Account extends Vue {
         id: "FXXXXXXXXX",
         name: "王大熊",
         gender: "男",
-        telecom:"09XXXXXXXX",
-        birthDate:"2010-12-09",
-        address:"北科大XXXX",
+        telecom: "09XXXXXXXX",
+        birthDate: "2010-12-09",
+        address: "北科大XXXX",
         createtime: "2019/10/20",
         edittime: "2019/10/20"
       }
@@ -100,4 +100,3 @@ export default class Account extends Vue {
   }
 }
 </script>
-
