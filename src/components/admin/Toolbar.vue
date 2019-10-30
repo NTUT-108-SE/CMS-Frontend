@@ -19,29 +19,26 @@
       <v-divider></v-divider>
       <v-list>
         <v-list-group
-            v-for="item in items"
-            :key="item.title"
-            :prepend-icon="item.icon"
-             no-action
+          v-for="item in items"
+          :key="item.title"
+          :prepend-icon="item.icon"
+          no-action
+        >
+          <template v-slot:activator>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+          <v-list-item
+            v-for="subItem in item.items"
+            :key="subItem.title"
+            link
+            :to="subItem.path"
           >
-            <template v-slot:activator>
-              <v-list-item-content>
-                <v-list-item-title v-text="item.title"></v-list-item-title>
-              </v-list-item-content>
-            </template>
-            <v-list-item
-              v-for="subItem in item.items"
-              :key="subItem.title"
-              link
-              :to="subItem.path"
-            >
             <v-list-item-content>
               <v-list-item-title v-text="subItem.title"></v-list-item-title>
             </v-list-item-content>
-            </v-list-item>
-            
-           
-          
+          </v-list-item>
         </v-list-group>
       </v-list>
     </v-navigation-drawer>
@@ -74,11 +71,10 @@ export default class Toolbar extends Vue {
   @State("image", { namespace: "Dashboard" }) image!: String;
   drawer: Boolean = true;
   LoginOut() {
-    if(confirm("確定要離開CMS系統嗎?"))
-    {
-      this.$router.push('/login');
+    if (confirm("確定要離開CMS系統嗎?")) {
+      this.$router.push("/login");
     }
-  };
+  }
   User: Object = {
     name: "Admin",
     url: "https://picsum.photos/1920/1080?random"
@@ -88,7 +84,7 @@ export default class Toolbar extends Vue {
       icon: "mdi-account-group",
       title: "使用者管理",
       items: [
-        { title: "瀏覽使用者帳戶", path: "/admin/account/accountall"  },
+        { title: "瀏覽使用者帳戶", path: "/admin/account/accountall" },
         { title: "新增使用者帳戶", path: "/admin/account/accounttemp" }
       ]
     },
@@ -96,15 +92,21 @@ export default class Toolbar extends Vue {
       icon: "mdi-account-lock",
       title: "病人資訊管理",
       items: [
-        { title: "瀏覽病人", path: "/admin/patientmanagement/patientmanagement"  },
-        { title: "新增病人", path: "/admin/patientmanagement/patientmanagementtemp" }
+        {
+          title: "瀏覽病人",
+          path: "/admin/patientmanagement/patientmanagement"
+        },
+        {
+          title: "新增病人",
+          path: "/admin/patientmanagement/patientmanagementtemp"
+        }
       ]
     },
     {
       icon: "mdi-clipboard-text-outline",
       title: "病歷管理",
       items: [
-        { title: "瀏覽病歷", path: "/admin/healthrecord/healthrecord"  },
+        { title: "瀏覽病歷", path: "/admin/healthrecord/healthrecord" },
         { title: "新增病歷", path: "/admin/healthrecord/healthrecordtemp" }
       ]
     },
@@ -112,15 +114,21 @@ export default class Toolbar extends Vue {
       icon: "mdi-plus-network-outline",
       title: "掛號管理",
       items: [
-        { title: "瀏覽掛號", path: "/admin/onlineregistration/onlineregistration"  },
-        { title: "新增掛號", path: "/admin/onlineregistration/onlineregistrationtemp" }
+        {
+          title: "瀏覽掛號",
+          path: "/admin/onlineregistration/onlineregistration"
+        },
+        {
+          title: "新增掛號",
+          path: "/admin/onlineregistration/onlineregistrationtemp"
+        }
       ]
     },
     {
       icon: "mdi-pill",
       title: "藥品管理",
       items: [
-        { title: "瀏覽藥品", path: "/admin/pill/pill"  },
+        { title: "瀏覽藥品", path: "/admin/pill/pill" },
         { title: "新增藥品", path: "/admin/pill/pilltemp" }
       ]
     },
@@ -128,7 +136,7 @@ export default class Toolbar extends Vue {
       icon: "mdi-receipt",
       title: "財務管理",
       items: [
-        { title: "瀏覽收據", path: "/admin/financial/financial"  },
+        { title: "瀏覽收據", path: "/admin/financial/financial" },
         { title: "新增收據", path: "/admin/financial/financialtemp" }
       ]
     }
