@@ -1,5 +1,5 @@
 <template>
-  <v-footer>
+  <v-footer :dark="dark ? true : false">
     <v-col class="text-center" cols="12">
       <span class>
         &copy; {{ new Date().getFullYear() }} —
@@ -15,8 +15,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
-export default class layout extends Vue {}
+export default class layout extends Vue {
+  @Prop() dark!: Boolean;
+}
 </script>

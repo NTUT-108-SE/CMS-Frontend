@@ -8,6 +8,12 @@
       <router-link to="/" tag="span">Home</router-link>
     </v-btn>
     <v-btn text>
+      <router-link to="LastestNews" tag="span">最新資訊</router-link>
+    </v-btn>
+    <v-btn text>
+      <router-link to="Registration" tag="span">掛號</router-link>
+    </v-btn>
+    <v-btn text>
       <router-link to="About" tag="span">About</router-link>
     </v-btn>
   </v-app-bar>

@@ -1,27 +1,11 @@
 <template>
-  <v-app>
-    <Header />
-    <v-content>
-      <transition>
-        <keep-alive>
-          <router-view></router-view>
-        </keep-alive>
-      </transition>
-    </v-content>
-    <Footer />
-  </v-app>
+  <router-view></router-view>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Header from "./components/Header.vue";
-import Footer from "./components/Footer.vue";
+import { Vue, Component } from "vue-property-decorator";
+import Login from "@/views/Login.vue";
 
-export default Vue.extend({
-  name: "App",
-  components: { Header, Footer },
-  data: () => ({
-    //
-  })
-});
+@Component({ components: { Login } })
+export default class App extends Vue {}
 </script>
