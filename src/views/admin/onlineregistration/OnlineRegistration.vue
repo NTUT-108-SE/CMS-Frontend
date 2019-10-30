@@ -1,7 +1,37 @@
 <template>
   <v-container class="fill-height">
-    <v-row justify="center" align="center">
-      <v-col md="12">
+    <v-row justify="center">
+
+      <v-col md="2">
+        <v-card >
+            <v-card-title class="py-2" color="grey">
+            看診資訊
+            </v-card-title>
+
+            <v-divider class="mx-4"></v-divider>
+
+            <v-row>
+            <v-card-text class="py-2 px-6">
+                看診醫生： {{registrationInfo.doctorName}}
+            </v-card-text>
+            </v-row>
+
+            <v-row>
+            <v-card-text class="py-2 px-6">
+                今日掛號人數： {{registrationInfo.totleRegistration}}
+            </v-card-text>
+            </v-row>
+
+            <v-row>
+            <v-card-text class="py-2 px-6 pb-4">
+                目前看診進度： {{registrationInfo.nowRegistration}}
+            </v-card-text>
+            </v-row>
+
+        </v-card>
+      </v-col>
+
+      <v-col md="10">
             <v-data-table
                 :headers="headers"
                 :items="desserts"
@@ -54,6 +84,11 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component
 export default class Account extends Vue {
+  registrationInfo: Object = {
+    doctorName: "黃俊凱",
+    totleRegistration: 87,
+    nowRegistration: 78
+  };
   search: string = '';
     headers: Object = [
         {
