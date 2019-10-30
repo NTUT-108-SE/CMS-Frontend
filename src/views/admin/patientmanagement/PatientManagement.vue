@@ -2,7 +2,7 @@
   <v-container class="fill-height">
     <v-row justify="center" align="center">
       <span
-        >病人管理子系統(Patient Infomation Management Subsystem) - PIMS</span
+        >病人列表</span
       >
     </v-row>
   </v-container>
