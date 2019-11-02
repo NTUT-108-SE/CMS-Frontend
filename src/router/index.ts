@@ -51,9 +51,9 @@ const routes = [
         component: () => import("@/views/admin/account/AccountAll.vue")
       },
       {
-        path: "account/accounttemp",
-        name: "account/accounttemp",
-        component: () => import("@/views/admin/account/AccountTemp.vue")
+        path: "account/accountform",
+        name: "account/accountform",
+        component: () => import("@/views/admin/account/AccountForm.vue")
       },
       {
         path: "financial/financialtemp",
@@ -105,10 +105,10 @@ const routes = [
           import("@/views/admin/patientmanagement/PatientManagement.vue")
       },
       {
-        path: "patientmanagement/patientmanagementtemp",
-        name: "patientmanagement/patientmanagementtemp",
+        path: "patientmanagement/patientmanagementform",
+        name: "patientmanagement/patientmanagementform",
         component: () =>
-          import("@/views/admin/patientmanagement/PatientManagementTemp.vue")
+          import("@/views/admin/patientmanagement/PatientManagementForm.vue")
       }
     ]
   },
