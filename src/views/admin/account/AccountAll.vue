@@ -6,7 +6,7 @@
           :headers="headers"
           :items="desserts"
           :search="search"
-          sort-by="createtime"
+          sort-by="userNum"
           class="elevation-1"
         >
           <template v-slot:top>
@@ -42,20 +42,20 @@
 import { Vue, Component } from "vue-property-decorator";
 
 @Component
-export default class Account extends Vue {
+export default class AccountAll extends Vue {
   search: string = "";
   headers: Object = [
     {
-      text: "使用者帳號",
+      text: "使用者號碼",
       align: "left",
-      sortable: false,
-      value: "uesername"
+      value: "userNum"
     },
+    { text: "使用者帳號", value: "userAccount" },
     { text: "姓名", value: "name" },
     { text: "性別", value: "gender" },
     { text: "權限", value: "permission" },
-    { text: "建立時間", value: "createtime" },
-    { text: "修改時間", value: "edittime" },
+    { text: "建立時間", value: "createTime" },
+    { text: "修改時間", value: "editTime" },
     { text: "操作", value: "action", sortable: false }
   ];
   desserts: object = [];
@@ -65,28 +65,22 @@ export default class Account extends Vue {
   initialize() {
     this.desserts = [
       {
-        uesername: "admin000",
-        name: "軟體工程-第一組-前端開發小組",
-        gender: "男",
-        permission: "admin",
-        createtime: "2019/10/20",
-        edittime: "2019/10/20"
-      },
-      {
-        uesername: "dctor000",
-        name: "醫生000",
+        userNum: "0",
+        userAccount: "test000",
+        name: "前端測試帳號",
         gender: "男",
         permission: "doctor",
-        createtime: "2019/10/21",
-        edittime: "2019/10/20"
+        createTime: "2019-10-20",
+        editTime: "2019-10-20"
       },
       {
-        uesername: "employee000",
-        name: "員工000",
-        gender: "女",
+        userNum: "1",
+        userAccount: "test001",
+        name: "前端測試帳號",
+        gender: "男",
         permission: "employee",
-        createtime: "2019/10/22",
-        edittime: "2019/10/20"
+        createTime: "2019-10-20",
+        editTime: "2019-10-20"
       }
     ];
   }
