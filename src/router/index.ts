@@ -81,10 +81,10 @@ const routes = [
         component: () => import("@/views/admin/healthrecord/HealthRecord.vue")
       },
       {
-        path: "healthrecord/healthrecordtemp",
-        name: "healthrecord/healthrecordtemp",
+        path: "healthrecord/healthrecordform",
+        name: "healthrecord/healthrecordform",
         component: () =>
-          import("@/views/admin/healthrecord/HealthRecordTemp.vue")
+          import("@/views/admin/healthrecord/HealthRecordForm.vue")
       },
       {
         path: "onlineregistration/onlineregistration",
@@ -93,10 +93,10 @@ const routes = [
           import("@/views/admin/onlineregistration/OnlineRegistration.vue")
       },
       {
-        path: "onlineregistration/onlineregistrationtemp",
-        name: "onlineregistration/onlineregistrationtemp",
+        path: "onlineregistration/onlineregistrationform",
+        name: "onlineregistration/onlineregistrationform",
         component: () =>
-          import("@/views/admin/onlineregistration/OnlineRegistrationTemp.vue")
+          import("@/views/admin/onlineregistration/OnlineRegistrationForm.vue")
       },
       {
         path: "patientmanagement/patientmanagement",

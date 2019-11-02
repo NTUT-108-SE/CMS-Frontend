@@ -1,64 +1,57 @@
 <template>
-  <v-container class="fill-height">
+  <v-container class="grey lighten-5">
     <v-row justify="center">
       <v-col md="2">
         <v-card>
           <v-card-title class="py-2" color="grey">
             看診資訊
           </v-card-title>
-
           <v-divider class="mx-4"></v-divider>
-
           <v-row>
             <v-card-text class="py-2 px-6">
               看診醫生： {{ registrationInfo.doctorName }}
             </v-card-text>
           </v-row>
-
           <v-row>
             <v-card-text class="py-2 px-6">
               今日掛號人數： {{ registrationInfo.totleRegistration }}
             </v-card-text>
           </v-row>
-
           <v-row>
             <v-card-text class="py-2 px-6 pb-4">
               目前看診進度： {{ registrationInfo.nowRegistration }}
             </v-card-text>
           </v-row>
+          <v-divider class="mx-4"></v-divider>
+          <v-row justify="center">
+            <v-card-actions align="center">
+              <v-btn dark color="primary" @click="nextNum">
+                <v-icon left>mdi-chevron-right</v-icon>
+                跳號
+              </v-btn>
+            </v-card-actions>
+          </v-row>
         </v-card>
       </v-col>
-
       <v-col md="10">
         <v-data-table
           :headers="headers"
           :items="desserts"
           :search="search"
-          sort-by="createtime"
+          sort-by="onlineRegistrationNum"
           class="elevation-1"
         >
           <template v-slot:top>
             <v-toolbar flat color="white">
-              <v-toolbar-title>掛號病患列表</v-toolbar-title>
+              <v-toolbar-title>掛號病人列表</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-text-field
                 v-model="search"
-                label="搜尋帳號"
+                label="搜尋掛號病人"
                 single-line
                 hide-details
               ></v-text-field>
             </v-toolbar>
-          </template>
-          <template v-slot:item.action="{ item }">
-            <v-icon class="mr-2" @click="editItem(item)">
-              mdi-account-edit-outline
-            </v-icon>
-            <v-icon class="mr-2" @click="deleteItem(item)">
-              mdi-delete
-            </v-icon>
-            <v-icon class="mr-2" @click="showItem(item)">
-              mdi-file-eye-outline
-            </v-icon>
           </template>
         </v-data-table>
       </v-col>
@@ -70,24 +63,23 @@
 import { Vue, Component } from "vue-property-decorator";
 
 @Component
-export default class Account extends Vue {
+export default class OnlineRegistration extends Vue {
   registrationInfo: Object = {
     doctorName: "黃俊凱",
-    totleRegistration: 87,
-    nowRegistration: 78
+    totleRegistration: 50,
+    nowRegistration: 1
   };
   search: string = "";
   headers: Object = [
     {
-      text: "姓名",
+      text: "掛號號碼",
       align: "left",
-      sortable: false,
-      value: "name"
+      value: "onlineRegistrationNum"
     },
-    { text: "身分證號碼", value: "ID" },
-    { text: "掛號日期", value: "registrationDate" },
-    { text: "看診日期", value: "treatDate" },
-    { text: "操作", value: "action", sortable: false }
+    { text: "身分證號碼", value: "patientID" },
+    { text: "姓名", value: "name" },
+    { text: "出生年月日", value: "birthDate" },
+    { text: "掛號日期", value: "registrationDate" }
   ];
   desserts: object = [];
   created() {
@@ -96,22 +88,25 @@ export default class Account extends Vue {
   initialize() {
     this.desserts = [
       {
-        name: "黃俊凱",
-        ID: "A000000000",
-        registrationDate: "2019/10/20",
-        treatDate: "2019/10/20"
+        onlineRegistrationNum: "0",
+        patientID: "A000000000",
+        name: "前端測試帳號",
+        registrationDate: "2019-10-20",
+        birthDate: "2019-10-20"
       },
       {
-        name: "蕭文全",
-        ID: "B000000000",
-        registrationDate: "2019/10/20",
-        treatDate: "2019/10/20"
+        onlineRegistrationNum: "1",
+        patientID: "A000000001",
+        name: "前端測試帳號",
+        registrationDate: "2019-10-20",
+        birthDate: "2019-10-20"
       },
       {
-        name: "陳冠穎",
-        ID: "C000000000",
-        registrationDate: "2019/10/20",
-        treatDate: "2019/10/20"
+        onlineRegistrationNum: "2",
+        patientID: "A000000002",
+        name: "前端測試帳號",
+        registrationDate: "2019-10-20",
+        birthDate: "2019-10-20"
       }
     ];
   }
