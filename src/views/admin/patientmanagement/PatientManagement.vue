@@ -6,7 +6,7 @@
           :headers="headers"
           :items="desserts"
           :search="search"
-          sort-by="createtime"
+          sort-by="patientID"
           class="elevation-1"
         >
           <template v-slot:top>
@@ -42,22 +42,20 @@
 import { Vue, Component } from "vue-property-decorator";
 
 @Component
-export default class Account extends Vue {
+export default class PatientManagement extends Vue {
   search: string = "";
   headers: Object = [
     {
-      text: "病人身分證",
+      text: "病人號碼",
       align: "left",
-      sortable: false,
-      value: "id"
+      value: "patientNum"
     },
+    { text: "身分證", value: "patientID" },
     { text: "姓名", value: "name" },
     { text: "性別", value: "gender" },
-    { text: "電話", value: "telecom" },
-    { text: "生日", value: "birthDate" },
-    { text: "地址", value: "address" },
-    { text: "建立時間", value: "createtime" },
-    { text: "修改時間", value: "edittime" },
+    { text: "出生年月日", value: "birthDate" },
+    { text: "建立時間", value: "createTime" },
+    { text: "修改時間", value: "editTime" },
     { text: "操作", value: "action", sortable: false }
   ];
   desserts: object = [];
@@ -67,34 +65,22 @@ export default class Account extends Vue {
   initialize() {
     this.desserts = [
       {
-        id: "FXXXXXXXXX",
-        name: "王小名",
+        patientNum: "0",
+        patientID: "AXXXXXXXXX",
+        name: "前端測試帳號",
         gender: "男",
-        telecom: "09XXXXXXXX",
         birthDate: "2010-05-03",
-        address: "北科大XXXX",
-        createtime: "2019/10/20",
-        edittime: "2019/10/20"
+        createTime: "2019-10-20",
+        editTime: "2019-10-20"
       },
       {
-        id: "FXXXXXXXXX",
-        name: "王小美",
+        patientNum: "1",
+        patientID: "DXXXXXXXXX",
+        name: "前端測試帳號",
         gender: "女",
-        telecom: "09XXXXXXXX",
-        birthDate: "2010-05-09",
-        address: "北科大XXXX",
-        createtime: "2019/10/20",
-        edittime: "2019/10/20"
-      },
-      {
-        id: "FXXXXXXXXX",
-        name: "王大熊",
-        gender: "男",
-        telecom: "09XXXXXXXX",
-        birthDate: "2010-12-09",
-        address: "北科大XXXX",
-        createtime: "2019/10/20",
-        edittime: "2019/10/20"
+        birthDate: "2010-05-03",
+        createTime: "2019-10-20",
+        editTime: "2019-10-20"
       }
     ];
   }

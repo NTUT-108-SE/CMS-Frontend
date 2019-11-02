@@ -85,7 +85,7 @@ export default class Toolbar extends Vue {
       title: "使用者管理",
       items: [
         { title: "瀏覽使用者帳戶", path: "/admin/account/accountall" },
-        { title: "新增使用者帳戶", path: "/admin/account/accounttemp" }
+        { title: "新增使用者帳戶", path: "/admin/account/accountform" }
       ]
     },
     {
@@ -98,7 +98,7 @@ export default class Toolbar extends Vue {
         },
         {
           title: "新增病人",
-          path: "/admin/patientmanagement/patientmanagementtemp"
+          path: "/admin/patientmanagement/patientmanagementform"
         }
       ]
     },
