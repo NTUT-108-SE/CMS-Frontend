@@ -4,7 +4,7 @@
       <v-col md="6">
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
-            <v-toolbar-title>新增病人</v-toolbar-title>
+            <v-toolbar-title>新增病歷</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-container>
@@ -29,14 +29,14 @@
                       ref="birthMenu"
                       v-model="birthMenu"
                       :close-on-content-click="false"
-                      :return-value.sync="birthDate"
+                      :return-value.sync="createHealthRecordDate"
                       transition="scale-transition"
                       offset-y
                       min-width="290px"
                     >
                       <template v-slot:activator="{ on }">
                         <v-text-field
-                          v-model="birthDate"
+                          v-model="createHealthRecordDate"
                           label="出生年月日"
                           prepend-icon="mdi-calendar-blank"
                           readonly
@@ -46,7 +46,7 @@
                         ></v-text-field>
                       </template>
                       <v-date-picker
-                        v-model="birthDate"
+                        v-model="createHealthRecordDate"
                         no-title
                         scrollable
                         min="1919-01-01"
@@ -58,7 +58,7 @@
                         <v-btn
                           text
                           color="primary"
-                          @click="$refs.birthMenu.save(birthDate)"
+                          @click="$refs.birthMenu.save(createHealthRecordDate)"
                           >OK</v-btn
                         >
                       </v-date-picker>
@@ -90,52 +90,25 @@
                   </v-col>
                 </v-row>
                 <v-row justify="">
-                  <v-col md="6">
-                    <v-select
-                      v-model="genderText"
-                      prepend-icon="mdi-gender-non-binary"
-                      :items="gender"
-                      :rules="[() => !!genderText || '必須填入']"
-                      label="性別"
-                      required
-                      dense
-                      outlined
-                    ></v-select>
-                  </v-col>
-                  <v-col md="6">
-                    <v-select
-                      v-model="maritalText"
-                      prepend-icon="mdi-human-male-female"
-                      :items="maritalStatus"
-                      :rules="[() => !!maritalText || '必須填入']"
-                      label="婚姻"
-                      required
-                      dense
-                      outlined
-                    ></v-select>
-                  </v-col>
-                </v-row>
-                <v-row justify="">
-                  <v-col md="6">
-                    <v-text-field
-                      label="電話"
-                      prepend-icon="mdi-phone-forward"
-                      v-model="telephone"
-                      :rules="[
-                        () => !!telephone || '必須填入',
-                        () => telephone.length <= 20 || '電話最多輸入20個字元'
-                      ]"
+                  <v-col md="12">
+                    <v-textarea
+                      label="病況描述"
+                      prepend-icon="mdi-file-document-edit-outline"
+                      v-model="conditionDescription"
+                      :rules="[() => !!conditionDescription || '必須填入']"
                       clearable
                       dense
                       outlined
-                    ></v-text-field>
+                    ></v-textarea>
                   </v-col>
-                  <v-col md="6">
+                </v-row>
+                <v-row justify="">
+                  <v-col md="12">
                     <v-textarea
-                      label="地址"
-                      prepend-icon="mdi-home-edit"
-                      v-model="address"
-                      :rules="[() => !!address || '必須填入']"
+                      label="藥物治療描述"
+                      prepend-icon="mdi-file-document-edit-outline"
+                      v-model="medicationDescription"
+                      :rules="[() => !!medicationDescription || '必須填入']"
                       clearable
                       dense
                       outlined
@@ -197,23 +170,19 @@
 import { Vue, Component } from "vue-property-decorator";
 
 @Component
-export default class PatientManagementForm extends Vue {
+export default class HealthRecordForm extends Vue {
   patientID: string = "";
   firstName: string = "";
   lastName: string = "";
-  genderText: string = "";
-  maritalText: string = "";
-  telephone: string = "";
-  address: string = "";
-  birthDate: string = "";
+  createHealthRecordDate: string = "";
+  conditionDescription: string = "";
+  medicationDescription: string = "";
   action: string = "add";
-  gender: Object = ["男", "女", "其他", "不願提供"];
-  maritalStatus: Object = ["未婚", "已婚", "離婚", "喪偶", "不願提供"];
   data() {
     return {
       picker: new Date().toISOString().substr(0, 10),
       treatDate: new Date().toISOString().substr(0, 10),
-      birthDate: "",
+      createHealthRecordDate: "",
       treatMenu: false,
       birthMenu: false
     };
@@ -222,11 +191,9 @@ export default class PatientManagementForm extends Vue {
     this.patientID = "";
     this.firstName = "";
     this.lastName = "";
-    this.genderText = "";
-    this.maritalText = "";
-    this.telephone = "";
-    this.address = "";
-    this.birthDate = "";
+    this.conditionDescription = "";
+    this.createHealthRecordDate = "";
+    this.medicationDescription = "";
   }
 }
 </script>

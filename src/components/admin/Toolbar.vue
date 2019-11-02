@@ -107,7 +107,7 @@ export default class Toolbar extends Vue {
       title: "病歷管理",
       items: [
         { title: "瀏覽病歷", path: "/admin/healthrecord/healthrecord" },
-        { title: "新增病歷", path: "/admin/healthrecord/healthrecordtemp" }
+        { title: "新增病歷", path: "/admin/healthrecord/healthrecordform" }
       ]
     },
     {
@@ -120,7 +120,7 @@ export default class Toolbar extends Vue {
         },
         {
           title: "新增掛號",
-          path: "/admin/onlineregistration/onlineregistrationtemp"
+          path: "/admin/onlineregistration/onlineregistrationform"
         }
       ]
     },
