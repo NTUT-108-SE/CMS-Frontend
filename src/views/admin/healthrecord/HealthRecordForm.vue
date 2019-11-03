@@ -128,16 +128,6 @@
                   </v-btn>
                   <v-btn
                     class="mx-12"
-                    dark
-                    color="primary"
-                    @click="edit"
-                    v-else-if="action === 'edit'"
-                  >
-                    <v-icon left>mdi-send-check</v-icon>
-                    編輯
-                  </v-btn>
-                  <v-btn
-                    class="mx-12"
                     @click="close"
                     dark
                     color="red"

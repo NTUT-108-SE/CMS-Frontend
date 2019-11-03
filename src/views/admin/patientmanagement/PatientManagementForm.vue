@@ -105,7 +105,7 @@
                   <v-col md="6">
                     <v-select
                       v-model="maritalText"
-                      prepend-icon="mdi-human-male-female"
+                      prepend-icon="mdi-heart-multiple"
                       :items="maritalStatus"
                       :rules="[() => !!maritalText || '必須填入']"
                       label="婚姻"
