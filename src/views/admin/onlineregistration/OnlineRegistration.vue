@@ -9,17 +9,17 @@
           <v-divider class="mx-4"></v-divider>
           <v-row>
             <v-card-text class="py-2 px-6">
-              看診醫生： {{ registrationInfo.doctorName }}
+              看診醫生： {{ doctorName }}
             </v-card-text>
           </v-row>
           <v-row>
             <v-card-text class="py-2 px-6">
-              今日掛號人數： {{ registrationInfo.totleRegistration }}
+              今日掛號人數： {{ totleRegistration }}
             </v-card-text>
           </v-row>
           <v-row>
             <v-card-text class="py-2 px-6 pb-4">
-              目前看診進度： {{ registrationInfo.nowRegistration }}
+              目前看診進度： {{ nowRegistration }}
             </v-card-text>
           </v-row>
           <v-divider class="mx-4"></v-divider>
@@ -64,11 +64,14 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component
 export default class OnlineRegistration extends Vue {
-  registrationInfo: Object = {
-    doctorName: "黃俊凱",
-    totleRegistration: 50,
-    nowRegistration: 1
-  };
+  doctorName: string = "黃俊凱";
+  totleRegistration: string = "50";
+  nowRegistration: string = "0";
+  nextNum() {
+    var next = parseInt(this.nowRegistration) + 1;
+    this.nowRegistration = next.toString();
+  }
+
   search: string = "";
   headers: Object = [
     {

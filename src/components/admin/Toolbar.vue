@@ -129,7 +129,7 @@ export default class Toolbar extends Vue {
       title: "藥品管理",
       items: [
         { title: "瀏覽藥品", path: "/admin/pill/pill" },
-        { title: "新增藥品", path: "/admin/pill/pilltemp" }
+        { title: "新增藥品", path: "/admin/pill/pillform" }
       ]
     },
     {
@@ -137,7 +137,7 @@ export default class Toolbar extends Vue {
       title: "財務管理",
       items: [
         { title: "瀏覽收據", path: "/admin/financial/financial" },
-        { title: "新增收據", path: "/admin/financial/financialtemp" }
+        { title: "新增收據", path: "/admin/financial/financialform" }
       ]
     }
   ];

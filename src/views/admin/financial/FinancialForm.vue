@@ -4,12 +4,12 @@
       <v-col md="6">
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
-            <v-toolbar-title>新增掛號</v-toolbar-title>
+            <v-toolbar-title>新增病人</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-container>
               <v-form class="py-3">
-                <v-row justify="center">
+                <v-row justify="">
                   <v-col md="6">
                     <v-text-field
                       label="身分證"
@@ -24,59 +24,20 @@
                       outlined
                     ></v-text-field>
                   </v-col>
-                </v-row>
-                <v-row justify="center">
                   <v-col md="6">
                     <v-menu
                       ref="birthMenu"
                       v-model="birthMenu"
                       :close-on-content-click="false"
-                      :return-value.sync="birthDate"
+                      :return-value.sync="CreateDate"
                       transition="scale-transition"
                       offset-y
                       min-width="290px"
                     >
                       <template v-slot:activator="{ on }">
                         <v-text-field
-                          v-model="birthDate"
-                          label="出生年月日"
-                          prepend-icon="mdi-calendar-blank"
-                          readonly
-                          v-on="on"
-                          dense
-                          outlined
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker v-model="birthDate" no-title scrollable>
-                        <v-spacer></v-spacer>
-                        <v-btn text color="primary" @click="birthMenu = false"
-                          >Cancel</v-btn
-                        >
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="$refs.birthMenu.save(birthDate)"
-                          >OK</v-btn
-                        >
-                      </v-date-picker>
-                    </v-menu>
-                  </v-col>
-                </v-row>
-                <v-row justify="center">
-                  <v-col md="6">
-                    <v-menu
-                      ref="OnlineRegistrationMenu"
-                      v-model="OnlineRegistrationMenu"
-                      :close-on-content-click="false"
-                      :return-value.sync="OnlineRegistrationDate"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="290px"
-                    >
-                      <template v-slot:activator="{ on }">
-                        <v-text-field
-                          v-model="OnlineRegistrationDate"
-                          label="掛號日期"
+                          v-model="CreateDate"
+                          label="建立時間"
                           prepend-icon="mdi-calendar-blank"
                           readonly
                           v-on="on"
@@ -85,29 +46,60 @@
                         ></v-text-field>
                       </template>
                       <v-date-picker
-                        v-model="OnlineRegistrationDate"
+                        v-model="CreateDate"
                         no-title
                         scrollable
+                        min="1919-01-01"
                       >
                         <v-spacer></v-spacer>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="OnlineRegistrationMenu = false"
+                        <v-btn text color="primary" @click="birthMenu = false"
                           >Cancel</v-btn
                         >
                         <v-btn
                           text
                           color="primary"
-                          @click="
-                            $refs.OnlineRegistrationMenu.save(
-                              OnlineRegistrationDate
-                            )
-                          "
+                          @click="$refs.birthMenu.save(CreateDate)"
                           >OK</v-btn
                         >
                       </v-date-picker>
                     </v-menu>
+                  </v-col>
+                </v-row>
+                <v-row justify="">
+                  <v-col md="6">
+                    <v-text-field
+                      label="姓氏"
+                      prepend-icon="mdi-account"
+                      v-model="firstName"
+                      :rules="[() => !!firstName || '必須填入']"
+                      clearable
+                      dense
+                      outlined
+                    ></v-text-field>
+                  </v-col>
+                  <v-col md="6">
+                    <v-text-field
+                      label="名字"
+                      prepend-icon="mdi-account"
+                      v-model="lastName"
+                      :rules="[() => !!lastName || '必須填入']"
+                      clearable
+                      dense
+                      outlined
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row justify="">
+                  <v-col md="12">
+                    <v-textarea
+                      label="收據項目"
+                      prepend-icon="mdi-file-document-edit-outline"
+                      v-model="financialItem"
+                      :rules="[() => !!financialItem || '必須填入']"
+                      clearable
+                      dense
+                      outlined
+                    ></v-textarea>
                   </v-col>
                 </v-row>
                 <v-row justify="center pb-3">
@@ -121,11 +113,20 @@
                     <v-icon left>mdi-send-check</v-icon>
                     送出
                   </v-btn>
-
+                  <v-btn
+                    class="mx-12"
+                    @click="close"
+                    dark
+                    color="red"
+                    v-else-if="action === 'close'"
+                  >
+                    <v-icon left>mdi-close </v-icon>
+                    關閉
+                  </v-btn>
                   <v-btn
                     class="mx-12"
                     @click="clear"
-                    v-if="action == 'add'"
+                    v-if="action != 'close'"
                     dark
                     color="secondary"
                   >
@@ -146,23 +147,28 @@
 import { Vue, Component } from "vue-property-decorator";
 
 @Component
-export default class OnlineRegistrationForm extends Vue {
+export default class FinancialForm extends Vue {
   patientID: string = "";
-  birthDate: string = "";
-  OnlineRegistrationDate: string = "";
+  firstName: string = "";
+  lastName: string = "";
+  CreateDate: string = "";
+  financialItem: string = "";
   action: string = "add";
   data() {
     return {
-      birthDate: "",
-      OnlineRegistrationDate: "",
-      OnlineRegistrationMenu: false,
+      picker: new Date().toISOString().substr(0, 10),
+      treatDate: new Date().toISOString().substr(0, 10),
+      CreateDate: "",
+      treatMenu: false,
       birthMenu: false
     };
   }
   clear() {
     this.patientID = "";
-    this.birthDate = "";
-    this.OnlineRegistrationDate = "";
+    this.firstName = "";
+    this.lastName = "";
+    this.CreateDate = "";
+    this.financialItem = "";
   }
 }
 </script>

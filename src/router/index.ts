@@ -56,9 +56,9 @@ const routes = [
         component: () => import("@/views/admin/account/AccountForm.vue")
       },
       {
-        path: "financial/financialtemp",
-        name: "financial/financialtemp",
-        component: () => import("@/views/admin/financial/FinancialTemp.vue")
+        path: "financial/financialform",
+        name: "financial/financialform",
+        component: () => import("@/views/admin/financial/FinancialForm.vue")
       },
       {
         path: "financial/financial",
@@ -71,9 +71,9 @@ const routes = [
         component: () => import("@/views/admin/pill/Pill.vue")
       },
       {
-        path: "pill/pilltemp",
-        name: "pill/pilltemp",
-        component: () => import("@/views/admin/pill/PillTemp.vue")
+        path: "pill/pillform",
+        name: "pill/pillform",
+        component: () => import("@/views/admin/pill/PillForm.vue")
       },
       {
         path: "healthrecord/healthrecord",
