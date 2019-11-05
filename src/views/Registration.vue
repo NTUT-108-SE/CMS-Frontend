@@ -2,39 +2,20 @@
   <v-container class="grey lighten-5">
     <v-row justify="center">
       <v-col md="2">
-        <v-card>
-          <v-card-title class="py-2" color="grey">
-            看診資訊
-          </v-card-title>
-
-          <v-divider class="mx-4"></v-divider>
-
-          <v-row>
-            <v-card-text class="py-2 px-6">
-              看診醫生： {{ registrationInfo.doctorName }}
-            </v-card-text>
-          </v-row>
-
-          <v-row>
-            <v-card-text class="py-2 px-6">
-              今日掛號人數： {{ registrationInfo.totleRegistration }}
-            </v-card-text>
-          </v-row>
-
-          <v-row>
-            <v-card-text class="py-2 px-6 pb-4">
-              目前看診進度： {{ registrationInfo.nowRegistration }}
-            </v-card-text>
-          </v-row>
+        <v-card class="elevation-12">
+          <RegistrationInfo />
         </v-card>
       </v-col>
 
       <v-col md="6">
-        <v-card>
+        <v-card class="elevation-12"
+          ><!--
+          <v-toolbar dark color="primary">
+            <v-toolbar-title>掛號</v-toolbar-title>
+          </v-toolbar>-->
           <v-card-title class="py-2" color="grey">
             掛號
           </v-card-title>
-
           <v-divider class="mx-4"></v-divider>
           <v-form class="py-3">
             <v-row justify="center">
@@ -144,13 +125,27 @@
             </v-row>
 
             <v-row justify="center pb-3">
-              <v-btn rounded class="mx-12">
-                <v-icon left>mdi-close-circle</v-icon>
-                取消掛號
+              <v-btn
+                rounded
+                class="mx-12"
+                dark
+                color="primary"
+                @click="submit"
+                v-if="action == 'add'"
+              >
+                <v-icon left>mdi-send-check</v-icon>
+                送出
               </v-btn>
-              <v-btn rounded class="mx-12">
-                <v-icon left>mdi-checkbox-marked-circle</v-icon>
-                確認掛號
+              <v-btn
+                rounded
+                class="mx-12"
+                @click="clear"
+                v-if="action == 'add'"
+                dark
+                color="secondary"
+              >
+                <v-icon left>mdi-autorenew</v-icon>
+                清除
               </v-btn>
             </v-row>
           </v-form>
@@ -162,9 +157,11 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
+import RegistrationInfo from "@/components/RegistrationInfo.vue";
 
-@Component
+@Component({ components: { RegistrationInfo } })
 export default class Registration extends Vue {
+  action: string = "add";
   data() {
     return {
       picker: new Date().toISOString().substr(0, 10),
@@ -174,11 +171,5 @@ export default class Registration extends Vue {
       birthMenu: false
     };
   }
-
-  registrationInfo: Object = {
-    doctorName: "黃俊凱",
-    totleRegistration: 87,
-    nowRegistration: 78
-  };
 }
 </script>
