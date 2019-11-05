@@ -4,7 +4,7 @@
       <v-col md="6">
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
-            <v-toolbar-title>新增病人</v-toolbar-title>
+            <v-toolbar-title>新增收據</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-container>

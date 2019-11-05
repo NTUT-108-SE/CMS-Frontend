@@ -52,7 +52,7 @@
       </template>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="mr-12 align-center"
-        ><span class="title">CMS DashBoard</span>
+        ><span class="title">Clinic Management System DashBoard</span>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
