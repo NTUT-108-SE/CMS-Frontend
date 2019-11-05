@@ -57,7 +57,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn icon @click="LoginOut">
+      <v-btn icon @click="Logout">
         <v-icon>mdi-exit-to-app </v-icon>
       </v-btn>
     </v-app-bar>
@@ -69,16 +69,17 @@ import { State, Mutation } from "vuex-class";
 @Component
 export default class Toolbar extends Vue {
   @State("image", { namespace: "Dashboard" }) image!: String;
+  @State("user", { namespace: "User" }) User!: Object;
+  @Mutation("User/UserLogout") userLogout!: Function;
+
   drawer: Boolean = true;
-  LoginOut() {
+  Logout() {
     if (confirm("確定要離開CMS系統嗎?")) {
-      this.$router.push("/login");
+      this.userLogout();
+      this.$router.push("/");
     }
   }
-  User: Object = {
-    name: "Admin",
-    url: "https://picsum.photos/1920/1080?random"
-  };
+
   items: Array<Object> = [
     {
       icon: "mdi-account-group",

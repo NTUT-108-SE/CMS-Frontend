@@ -4,8 +4,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import Login from "@/views/Login.vue";
 
-@Component({ components: { Login } })
+@Component
 export default class App extends Vue {}
 </script>

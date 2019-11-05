@@ -6,6 +6,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
+import { Component } from "vue-property-decorator";
 
 Vue.config.productionTip = false;
 axios.defaults.headers.post["Content-Type"] =
@@ -17,6 +18,12 @@ Vue.use(Toasted, {
   theme: "outline",
   iconPack: "mdi"
 });
+
+Component.registerHooks([
+  "beforeRouteEnter",
+  "beforeRouteLeave",
+  "beforeRouteUpdate"
+]);
 
 new Vue({
   router,
