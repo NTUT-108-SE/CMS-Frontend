@@ -56,6 +56,11 @@ const routes = [
         component: () => import("@/views/admin/account/AccountForm.vue")
       },
       {
+        path: "account/accountset",
+        name: "account/accountset",
+        component: () => import("@/views/admin/account/AccountSet.vue")
+      },
+      {
         path: "financial/financialform",
         name: "financial/financialform",
         component: () => import("@/views/admin/financial/FinancialForm.vue")
@@ -99,6 +104,14 @@ const routes = [
           import("@/views/admin/onlineregistration/OnlineRegistrationForm.vue")
       },
       {
+        path: "onlineregistration/onlineregistrationtimeset",
+        name: "onlineregistration/onlineregistrationtimeset",
+        component: () =>
+          import(
+            "@/views/admin/onlineregistration/OnlineRegistrationTimeSet.vue"
+          )
+      },
+      {
         path: "patientmanagement/patientmanagement",
         name: "patientmanagement/patientmanagement",
         component: () =>
@@ -109,6 +122,21 @@ const routes = [
         name: "patientmanagement/patientmanagementform",
         component: () =>
           import("@/views/admin/patientmanagement/PatientManagementForm.vue")
+      },
+      {
+        path: "webmanagement/bulletinall",
+        name: "webmanagement/bulletinall",
+        component: () => import("@/views/admin/webmanagement/BulletinAll.vue")
+      },
+      {
+        path: "webmanagement/bulletinform",
+        name: "webmanagement/bulletinform",
+        component: () => import("@/views/admin/webmanagement/BulletinForm.vue")
+      },
+      {
+        path: "webmanagement/webdesign",
+        name: "webmanagement/webdesign",
+        component: () => import("@/views/admin/webmanagement/WebDesign.vue")
       }
     ]
   },
