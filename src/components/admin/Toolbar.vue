@@ -86,7 +86,8 @@ export default class Toolbar extends Vue {
       title: "使用者管理",
       items: [
         { title: "瀏覽使用者帳戶", path: "/admin/account/accountall" },
-        { title: "新增使用者帳戶", path: "/admin/account/accountform" }
+        { title: "新增使用者帳戶", path: "/admin/account/accountform" },
+        { title: "個人資料設定", path: "/admin/account/accountset" }
       ]
     },
     {
@@ -122,6 +123,10 @@ export default class Toolbar extends Vue {
         {
           title: "新增掛號",
           path: "/admin/onlineregistration/onlineregistrationform"
+        },
+        {
+          title: "掛號時間設定",
+          path: "/admin/onlineregistration/onlineregistrationtimeset"
         }
       ]
     },
@@ -139,6 +144,15 @@ export default class Toolbar extends Vue {
       items: [
         { title: "瀏覽收據", path: "/admin/financial/financial" },
         { title: "新增收據", path: "/admin/financial/financialform" }
+      ]
+    },
+    {
+      icon: "mdi-web",
+      title: "形象網頁設定",
+      items: [
+        { title: "瀏覽公告", path: "/admin/webmanagement/bulletinall" },
+        { title: "新增公告", path: "/admin/webmanagement/bulletinform" },
+        { title: "網頁設定", path: "/admin/webmanagement/webdesign" }
       ]
     }
   ];
