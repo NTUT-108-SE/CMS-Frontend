@@ -27,6 +27,12 @@
             <v-card-actions align="center">
               <v-btn dark color="primary" @click="nextNum">
                 <v-icon left>mdi-chevron-right</v-icon>
+                下一號
+              </v-btn>
+            </v-card-actions>
+            <v-card-actions align="center">
+              <v-btn dark color="red" @click="nextNum">
+                <v-icon left>mdi-chevron-right</v-icon>
                 跳號
               </v-btn>
             </v-card-actions>
