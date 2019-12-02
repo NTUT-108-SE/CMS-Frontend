@@ -58,6 +58,54 @@
                   </v-col>
                 </v-row>
                 <v-row justify="">
+                  <v-col md="6">
+                    <v-text-field
+                      label="目標網址1"
+                      prepend-icon="mdi-image"
+                      v-model="targetUrlOne"
+                      :rules="[() => !!targetUrlOne || '必須填入']"
+                      clearable
+                      dense
+                      outlined
+                    ></v-text-field>
+                  </v-col>
+                  <v-col md="6">
+                    <v-text-field
+                      label="目標網址2"
+                      prepend-icon="mdi-image"
+                      v-model="targetUrlTwo"
+                      :rules="[() => !!targetUrlTwo || '必須填入']"
+                      clearable
+                      dense
+                      outlined
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row justify="">
+                  <v-col md="6">
+                    <v-text-field
+                      label="目標網址3"
+                      prepend-icon="mdi-image"
+                      v-model="targetUrlThree"
+                      :rules="[() => !!targetUrlThree || '必須填入']"
+                      clearable
+                      dense
+                      outlined
+                    ></v-text-field>
+                  </v-col>
+                  <v-col md="6">
+                    <v-text-field
+                      label="目標網址4"
+                      prepend-icon="mdi-image"
+                      v-model="targetUrlFour"
+                      :rules="[() => !!targetUrlFour || '必須填入']"
+                      clearable
+                      dense
+                      outlined
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row justify="">
                   <v-col md="12">
                     <v-textarea
                       label="院所介紹"
@@ -110,15 +158,15 @@
                   </v-col>
                 </v-row>
                 <v-row justify="center pb-3">
-                  <v-btn class="mx-12" dark color="primary" @click="submit">
+                  <v-btn class="mx-4" dark color="primary" @click="submit">
                     <v-icon left>mdi-send-check</v-icon>
                     設定
                   </v-btn>
-                  <v-btn class="mx-12" @click="close" dark color="red">
+                  <v-btn class="mx-4" @click="close" dark color="red">
                     <v-icon left>mdi-close </v-icon>
                     關閉
                   </v-btn>
-                  <v-btn class="mx-12" @click="clear" dark color="secondary">
+                  <v-btn class="mx-4" @click="clear" dark color="secondary">
                     <v-icon left>mdi-autorenew</v-icon>
                     清除
                   </v-btn>
@@ -141,6 +189,10 @@ export default class WebDesign extends Vue {
   imageUrlTwo: string = "";
   imageUrlThree: string = "";
   imageUrlFour: string = "";
+  targetUrlOne: string = "";
+  targetUrlTwo: string = "";
+  targetUrlThree: string = "";
+  targetUrlFour: string = "";
   clinicIntroduction: string = "";
   indications: string = "";
   doctorIntroduction: string = "";
