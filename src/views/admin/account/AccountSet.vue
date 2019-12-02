@@ -103,15 +103,15 @@
                   </v-col>
                 </v-row>
                 <v-row justify="center pb-3">
-                  <v-btn class="mx-12" dark color="primary" @click="edit">
+                  <v-btn class="mx-4" dark color="primary" @click="edit">
                     <v-icon left>mdi-send-check</v-icon>
                     編輯
                   </v-btn>
-                  <v-btn class="mx-12" @click="Close" dark color="red">
+                  <v-btn class="mx-4" @click="Close" dark color="red">
                     <v-icon left>mdi-close </v-icon>
                     關閉
                   </v-btn>
-                  <v-btn class="mx-12" @click="Clear" dark color="secondary">
+                  <v-btn class="mx-4" @click="Clear" dark color="secondary">
                     <v-icon left>mdi-autorenew</v-icon>
                     清除
                   </v-btn>
