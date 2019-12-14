@@ -21,6 +21,7 @@ import { State } from "vuex-class";
 @Component({ components: { Footer, Toolbar } })
 export default class Layout extends Vue {
   @State("user", { namespace: "User" }) user!: Object;
+
   beforeRouteEnter(to: any, from: any, next: (vm: any) => void) {
     next((vm: any) => {
       if (vm.user == undefined) {
@@ -28,5 +29,14 @@ export default class Layout extends Vue {
       }
     });
   }
+  // beforeCreate() {
+  //   this.axios
+  //     .get("/check")
+  //     .then(data => data.data)
+  //     .then(({ ok }) => {})
+  //     .catch(data => {
+  //       this.$router.push("/login");
+  //     });
+  // }
 }
 </script>

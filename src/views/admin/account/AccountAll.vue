@@ -6,8 +6,9 @@
           :headers="headers"
           :items="desserts"
           :search="search"
-          sort-by="userNum"
+          sort-by="role"
           class="elevation-1"
+          :loading="loading"
         >
           <template v-slot:top>
             <v-toolbar flat color="white">
@@ -40,49 +41,89 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-
+import { State, Mutation } from "vuex-class";
+import { User } from "@/store/modules/user/types";
 @Component
 export default class AccountAll extends Vue {
-  search: string = "";
-  headers: Object = [
-    {
-      text: "使用者號碼",
-      align: "left",
-      value: "userNum"
-    },
-    { text: "使用者帳號", value: "userAccount" },
+  @State("user", { namespace: "User" }) user!: User;
+  @Mutation("User/UserLogout") userLogout!: Function;
+  private loading: Boolean = true;
+  private search: string = "";
+  private headers: Object = [
+    { text: "使用者帳號", value: "email" },
     { text: "姓名", value: "name" },
-    { text: "性別", value: "gender" },
-    { text: "權限", value: "permission" },
-    { text: "建立時間", value: "createTime" },
-    { text: "修改時間", value: "editTime" },
+    { text: "權限", value: "role" },
     { text: "操作", value: "action", sortable: false }
   ];
-  desserts: object = [];
+  private desserts: Array<Object> = [];
+
   created() {
-    this.initialize();
+    this.getUserAll();
   }
-  initialize() {
-    this.desserts = [
-      {
-        userNum: "0",
-        userAccount: "test000",
-        name: "前端測試帳號",
-        gender: "男",
-        permission: "doctor",
-        createTime: "2019-10-20",
-        editTime: "2019-10-20"
-      },
-      {
-        userNum: "1",
-        userAccount: "test001",
-        name: "前端測試帳號",
-        gender: "男",
-        permission: "employee",
-        createTime: "2019-10-20",
-        editTime: "2019-10-20"
+  destroyed() {
+    delete this.desserts;
+  }
+  getUserAll() {
+    this.axios
+      .get("/user/all")
+      .then(data => data.data)
+      .then(({ users }) => {
+        this.desserts = users;
+        this.loading = false;
+      })
+      .catch(data => {
+        this.$toasted.show(`資料讀取失敗，請重新登入`, {
+          type: "error",
+          position: "top-right",
+          duration: 3000
+        });
+        this.userLogout();
+        this.$router.push("/login");
+      });
+  }
+  deleteItem(item: any) {
+    if (this.user.email == item["email"]) {
+      this.$toasted.show(`抱歉不能刪除自己的帳號`, {
+        type: "error",
+        position: "top-right",
+        duration: 3000
+      });
+    } else {
+      const index = this.desserts.indexOf(item);
+      if (confirm("確定要刪除這個帳號嗎?")) {
+        var order = "/user/" + item["id"];
+        this.axios
+          .delete(order)
+          .then(data => data.data)
+          .then(({ ok }) => {
+            this.desserts.splice(index, 1);
+            this.$toasted.show(`刪除成功`, {
+              type: "success",
+              position: "top-right",
+              duration: 3000
+            });
+          })
+          .catch(data => {
+            this.$toasted.show(`刪除失敗，請重新刪除一次`, {
+              type: "error",
+              position: "top-right",
+              duration: 3000
+            });
+          });
       }
-    ];
+    }
+  }
+  showItem(item: any) {
+    this.$router.push({
+      path: "/admin/account/accountform",
+      query: { action: "show", id: item["id"] }
+    });
+  }
+  editItem(item: any) {
+    this.$router.push({
+      path: "/admin/account/accountform",
+      query: { action: "edit", id: item["id"] }
+    });
   }
 }
 </script>
