@@ -117,17 +117,17 @@
                     dark
                     color="primary"
                     @click="edit"
-                    v-else-if="buttionAction == 'edit'"
+                    v-if="buttionAction == 'edit'"
                   >
                     <v-icon left>mdi-send-check</v-icon>
-                    編輯
+                    更新
                   </v-btn>
                   <v-btn
                     class="mx-12"
                     @click="close"
                     dark
                     color="red"
-                    v-else-if="buttionAction == 'close'"
+                    v-if="buttionAction != 'add'"
                   >
                     <v-icon left>mdi-close </v-icon>
                     關閉
@@ -135,7 +135,7 @@
                   <v-btn
                     class="mx-12"
                     @click="clear"
-                    v-if="buttionAction != 'close'"
+                    v-if="buttionAction == 'add'"
                     dark
                     color="secondary"
                   >
