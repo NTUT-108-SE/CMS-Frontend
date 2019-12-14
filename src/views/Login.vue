@@ -70,7 +70,6 @@ export default class Login extends Vue {
       }
     });
   }
-
   onLogin() {
     this.axios
       .post(

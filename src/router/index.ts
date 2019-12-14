@@ -53,12 +53,18 @@ const routes = [
       {
         path: "account/accountform",
         name: "account/accountform",
-        component: () => import("@/views/admin/account/AccountForm.vue")
+        component: () => import("@/views/admin/account/AccountForm.vue"),
+        props: true
       },
       {
         path: "account/accountset",
         name: "account/accountset",
         component: () => import("@/views/admin/account/AccountSet.vue")
+      },
+      {
+        path: "account/passwordupdate",
+        name: "account/passwordupdate",
+        component: () => import("@/views/admin/account/PasswordUpdate.vue")
       },
       {
         path: "financial/financialform",

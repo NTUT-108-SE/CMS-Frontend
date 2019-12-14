@@ -12,10 +12,34 @@
                 <v-row justify="center">
                   <v-col md="6">
                     <v-text-field
-                      label="姓名"
+                      label="請輸入舊的密碼"
+                      type="password"
                       prepend-icon="mdi-account"
-                      v-model="name"
-                      :rules="[() => !!name || '必須填入']"
+                      v-model="oldUserPassword"
+                      :rules="[() => !!oldUserPassword || '必須填入']"
+                      clearable
+                      dense
+                      outlined
+                    ></v-text-field>
+                  </v-col>
+                  <v-col md="6">
+                    <v-select v-show="false"></v-select>
+                  </v-col>
+                </v-row>
+                <v-row justify="center">
+                  <v-col md="6">
+                    <v-text-field
+                      label="請輸入新的密碼"
+                      type="password"
+                      prepend-icon="mdi-lock-reset"
+                      v-model="newUserPassword"
+                      :rules="[
+                        () => !!newUserPassword || '必須填入',
+                        () =>
+                          newUserPassword.length >= 8 || '密碼介於8-20字元之間',
+                        () =>
+                          newUserPassword.length <= 20 || '密碼介於8-20字元之間'
+                      ]"
                       clearable
                       dense
                       outlined
@@ -23,25 +47,26 @@
                   </v-col>
                   <v-col md="6">
                     <v-text-field
-                      label="圖片網址"
-                      prepend-icon="mdi-image"
-                      v-model="imageUrl"
+                      label="請重複輸入新的密碼"
+                      type="password"
+                      prepend-icon="mdi-lock-reset"
+                      v-model="againNewUserPassword"
+                      :rules="[
+                        () => !!againNewUserPassword || '必須填入',
+                        () =>
+                          againNewUserPassword.length >= 8 ||
+                          '密碼介於8-20字元之間',
+                        () =>
+                          againNewUserPassword.length <= 20 ||
+                          '密碼介於8-20字元之間',
+                        () =>
+                          againNewUserPassword == newUserPassword ||
+                          '與新的密碼不一致'
+                      ]"
                       clearable
                       dense
                       outlined
                     ></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row justify="center">
-                  <v-col md="12">
-                    <v-textarea
-                      label="帳號描述"
-                      prepend-icon="mdi-file-document-edit-outline"
-                      v-model="introduction"
-                      clearable
-                      dense
-                      outlined
-                    ></v-textarea>
                   </v-col>
                 </v-row>
                 <v-row justify="center">
@@ -68,26 +93,26 @@ import { Vue, Component } from "vue-property-decorator";
 import { State, Mutation } from "vuex-class";
 import { User } from "@/store/modules/user/types";
 @Component
-export default class AccountSet extends Vue {
+export default class PasswordUpdate extends Vue {
   @State("user", { namespace: "User" }) user!: User;
-  private introduction: String | null = "";
-  private imageUrl: String | null = "";
-  private name: String = "";
+  private oldUserPassword: string = "";
+  private againNewUserPassword: string = "";
+  private newUserPassword: string = "";
   private valid: Boolean = true;
+
   clear() {
-    this.introduction = "";
-    this.imageUrl = "";
-    this.name = "";
+    this.oldUserPassword = "";
+    this.newUserPassword = "";
+    this.againNewUserPassword = "";
   }
   update() {
     if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
       this.axios
-        .put(
-          "/user",
+        .post(
+          "/user/change_password",
           JSON.stringify({
-            name: this.name,
-            image: this.imageUrl,
-            introduction: this.introduction
+            old_password: this.oldUserPassword,
+            password: this.newUserPassword
           })
         )
         .then(data => data.data)
@@ -109,15 +134,6 @@ export default class AccountSet extends Vue {
           });
         });
     }
-  }
-
-  created() {
-    this.getUser();
-  }
-  getUser() {
-    this.imageUrl = this.user.image;
-    this.introduction = this.user.introduction;
-    this.name = this.user.name;
   }
 }
 </script>
