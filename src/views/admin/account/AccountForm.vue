@@ -170,7 +170,6 @@ export default class AccountForm extends Vue {
   private valid: Boolean = true;
   created() {
     if (this.$route.query.action == "show") {
-      console.log(this.$route.query.action);
       this.formTitle = "顯示帳號資料";
       this.getShowData();
       this.activeForm = true;
