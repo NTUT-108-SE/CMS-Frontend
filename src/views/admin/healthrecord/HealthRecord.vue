@@ -6,7 +6,7 @@
           :headers="headers"
           :items="desserts"
           :search="search"
-          sort-by="healthRecordID"
+          sort-by="patientId"
           class="elevation-1"
         >
           <template v-slot:top>
@@ -40,38 +40,48 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component
 export default class HealthRecord extends Vue {
-  search: string = "";
-  headers: Object = [
-    {
-      text: "病歷號碼",
-      align: "left",
-      sortable: false,
-      value: "healthRecordID"
-    },
-    { text: "身分證", value: "patientID" },
-    { text: "姓名", value: "name" },
-    { text: "看診日期", value: "createHealthRecordDate" },
+  private search: string = "";
+  private headers: Object = [
+    { text: "病歷號碼", value: "id" },
+    { text: "身分證", value: "patientId" },
+    { text: "看診描述", value: "code" },
+    { text: "用藥情況", value: "medication" },
+    { text: "看診日期", value: "date" },
     { text: "操作", value: "action", sortable: false }
   ];
-  desserts: object = [];
+  private desserts: Array<Object> = [];
   created() {
-    this.initialize();
+    this.axios
+      .get("/healthrecord/all?offset=0&count=20")
+      .then(data => data.data)
+      .then(({ healthrecords }) => {
+        this.desserts = healthrecords["entry"];
+      })
+      .catch(data => {});
   }
-  initialize() {
-    this.desserts = [
-      {
-        healthRecordID: "0",
-        patientID: "AXXXXXXXXX",
-        name: "前端測試帳號",
-        createHealthRecordDate: "2019-10-20"
-      },
-      {
-        healthRecordID: "1",
-        patientID: "DXXXXXXXXX",
-        name: "前端測試帳號",
-        createHealthRecordDate: "2019-10-20"
-      }
-    ];
+  deleteItem(item: any) {
+    if (confirm("確定要刪除這個病歷嗎?")) {
+      const index = this.desserts.indexOf(item);
+      var order = "/healthrecord/" + item["id"];
+      this.axios
+        .delete(order)
+        .then(data => data.data)
+        .then(({ ok }) => {
+          this.desserts.splice(index, 1);
+          this.$toasted.show(`刪除成功`, {
+            type: "success",
+            position: "top-right",
+            duration: 3000
+          });
+        })
+        .catch(data => {
+          this.$toasted.show(`刪除失敗，請重新刪除一次`, {
+            type: "error",
+            position: "top-right",
+            duration: 3000
+          });
+        });
+    }
   }
 }
 </script>
