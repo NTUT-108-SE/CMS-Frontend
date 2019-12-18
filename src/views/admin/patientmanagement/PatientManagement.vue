@@ -6,7 +6,7 @@
           :headers="headers"
           :items="desserts"
           :search="search"
-          sort-by="patientID"
+          sort-by="id"
           class="elevation-1"
         >
           <template v-slot:top>
@@ -40,49 +40,49 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-
+import { State, Mutation } from "vuex-class";
+import { User } from "@/store/modules/user/types";
 @Component
 export default class PatientManagement extends Vue {
+  @State("user", { namespace: "User" }) user!: User;
+  @Mutation("User/UserLogout") userLogout!: Function;
   search: string = "";
   headers: Object = [
     {
       text: "病人號碼",
       align: "left",
-      value: "patientNum"
+      value: "id"
     },
-    { text: "身分證", value: "patientID" },
-    { text: "姓名", value: "name" },
+    { text: "身分證", value: "identifier" },
+    { text: "姓氏", value: "family" },
+    { text: "名子", value: "given" },
     { text: "性別", value: "gender" },
     { text: "出生年月日", value: "birthDate" },
-    { text: "建立時間", value: "createTime" },
-    { text: "修改時間", value: "editTime" },
+    { text: "電話", value: "phone" },
     { text: "操作", value: "action", sortable: false }
   ];
   desserts: object = [];
   created() {
-    this.initialize();
+    this.getPatientAll();
   }
-  initialize() {
-    this.desserts = [
-      {
-        patientNum: "0",
-        patientID: "AXXXXXXXXX",
-        name: "前端測試帳號",
-        gender: "男",
-        birthDate: "2010-05-03",
-        createTime: "2019-10-20",
-        editTime: "2019-10-20"
-      },
-      {
-        patientNum: "1",
-        patientID: "DXXXXXXXXX",
-        name: "前端測試帳號",
-        gender: "女",
-        birthDate: "2010-05-03",
-        createTime: "2019-10-20",
-        editTime: "2019-10-20"
-      }
-    ];
+
+  getPatientAll() {
+    console.log("Ready to get");
+    this.axios
+      .get("/patient/all")
+      .then(data => data.data)
+      .then(({ patients }) => {
+        this.desserts = patients.entry;
+      })
+      .catch(data => {
+        this.$toasted.show(`資料讀取失敗，請重新登入`, {
+          type: "error",
+          position: "top-right",
+          duration: 3000
+        });
+        this.userLogout();
+        this.$router.push("/login");
+      });
   }
 }
 </script>

@@ -14,10 +14,10 @@
                     <v-text-field
                       label="身分證"
                       prepend-icon="mdi-account-badge-horizontal-outline"
-                      v-model="patientID"
+                      v-model="identifier"
                       :rules="[
-                        () => !!patientID || '必須填入',
-                        () => patientID.length == 10 || '身分證必須是10個字元'
+                        () => !!identifier || '必須填入',
+                        () => identifier.length == 10 || '身分證必須是10個字元'
                       ]"
                       clearable
                       dense
@@ -198,7 +198,8 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component
 export default class PatientManagementForm extends Vue {
-  patientID: string = "";
+  private formTitle: string = "新增病人";
+  identifier: string = "";
   firstName: string = "";
   lastName: string = "";
   genderText: string = "";
@@ -219,7 +220,7 @@ export default class PatientManagementForm extends Vue {
     };
   }
   clear() {
-    this.patientID = "";
+    this.identifier = "";
     this.firstName = "";
     this.lastName = "";
     this.genderText = "";
@@ -227,6 +228,22 @@ export default class PatientManagementForm extends Vue {
     this.telephone = "";
     this.address = "";
     this.birthDate = "";
+    this.gender = ["男", "女", "其他", "不願提供"];
+    this.maritalStatus = ["未婚", "已婚", "離婚", "喪偶", "不願提供"];
   }
+  created() {
+    if (this.$route.query.action == "show") {
+      this.formTitle = "顯示病人資料";
+      this.getShowData();
+      // this.activeForm = true;
+      // this.buttionAction = "close";
+    } else if (this.$route.query.action == "edit") {
+      this.formTitle = "更新病人權限";
+      // this.buttionAction = "edit";
+      this.getShowData();
+    }
+  }
+
+  getShowData() {}
 }
 </script>
