@@ -67,7 +67,6 @@ export default class PatientManagement extends Vue {
   }
 
   getPatientAll() {
-    console.log("Ready to get");
     this.axios
       .get("/patient/all")
       .then(data => data.data)
