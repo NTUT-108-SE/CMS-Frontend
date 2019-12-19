@@ -6,8 +6,9 @@
           :headers="headers"
           :items="desserts"
           :search="search"
-          sort-by="patientId"
+          sort-by="id"
           class="elevation-1"
+          :loading="loading"
         >
           <template v-slot:top>
             <v-toolbar flat color="white">
@@ -32,6 +33,9 @@
         </v-data-table>
       </v-col>
     </v-row>
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
   </v-container>
 </template>
 
@@ -41,26 +45,29 @@ import { Vue, Component } from "vue-property-decorator";
 @Component
 export default class HealthRecord extends Vue {
   private search: string = "";
+  private loading: Boolean = true;
+  private overlay: Boolean = false;
   private headers: Object = [
     { text: "病歷號碼", value: "id" },
-    { text: "身分證", value: "patientId" },
-    { text: "看診描述", value: "code" },
-    { text: "用藥情況", value: "medication" },
+    { text: "身分證", value: "identifier" },
+    { text: "姓名", value: "name" },
     { text: "看診日期", value: "date" },
     { text: "操作", value: "action", sortable: false }
   ];
   private desserts: Array<Object> = [];
   created() {
     this.axios
-      .get("/healthrecord/all?offset=0&count=20")
+      .get("/healthrecord/all")
       .then(data => data.data)
       .then(({ healthrecords }) => {
         this.desserts = healthrecords["entry"];
+        this.loading = false;
       })
       .catch(data => {});
   }
   deleteItem(item: any) {
     if (confirm("確定要刪除這個病歷嗎?")) {
+      this.overlay = true;
       const index = this.desserts.indexOf(item);
       var order = "/healthrecord/" + item["id"];
       this.axios
@@ -68,6 +75,7 @@ export default class HealthRecord extends Vue {
         .then(data => data.data)
         .then(({ ok }) => {
           this.desserts.splice(index, 1);
+          this.overlay = false;
           this.$toasted.show(`刪除成功`, {
             type: "success",
             position: "top-right",
@@ -75,6 +83,7 @@ export default class HealthRecord extends Vue {
           });
         })
         .catch(data => {
+          this.overlay = false;
           this.$toasted.show(`刪除失敗，請重新刪除一次`, {
             type: "error",
             position: "top-right",
@@ -82,6 +91,12 @@ export default class HealthRecord extends Vue {
           });
         });
     }
+  }
+  showItem(item: any) {
+    this.$router.push({
+      path: "/admin/healthrecord/healthrecordform",
+      query: { action: "show", id: item["id"] }
+    });
   }
 }
 </script>
