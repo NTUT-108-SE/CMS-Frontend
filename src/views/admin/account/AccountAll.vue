@@ -36,6 +36,9 @@
         </v-data-table>
       </v-col>
     </v-row>
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
   </v-container>
 </template>
 
@@ -47,6 +50,7 @@ import { User } from "@/store/modules/user/types";
 export default class AccountAll extends Vue {
   @State("user", { namespace: "User" }) user!: User;
   @Mutation("User/UserLogout") userLogout!: Function;
+  private overlay: Boolean = false;
   private loading: Boolean = true;
   private search: string = "";
   private headers: Object = [
@@ -91,11 +95,13 @@ export default class AccountAll extends Vue {
     } else {
       const index = this.desserts.indexOf(item);
       if (confirm("確定要刪除這個帳號嗎?")) {
+        this.overlay = true;
         var order = "/user/" + item["id"];
         this.axios
           .delete(order)
           .then(data => data.data)
           .then(({ ok }) => {
+            this.overlay = false;
             this.desserts.splice(index, 1);
             this.$toasted.show(`刪除成功`, {
               type: "success",
@@ -104,6 +110,7 @@ export default class AccountAll extends Vue {
             });
           })
           .catch(data => {
+            this.overlay = false;
             this.$toasted.show(`刪除失敗，請重新刪除一次`, {
               type: "error",
               position: "top-right",
