@@ -8,6 +8,7 @@
           :search="search"
           sort-by="id"
           class="elevation-1"
+          :loading="loading"
         >
           <template v-slot:top>
             <v-toolbar flat color="white">
@@ -46,6 +47,7 @@ import { User } from "@/store/modules/user/types";
 export default class PatientManagement extends Vue {
   @State("user", { namespace: "User" }) user!: User;
   @Mutation("User/UserLogout") userLogout!: Function;
+  private loading: Boolean = true;
   search: string = "";
   headers: Object = [
     {
@@ -61,7 +63,7 @@ export default class PatientManagement extends Vue {
     { text: "電話", value: "phone" },
     { text: "操作", value: "action", sortable: false }
   ];
-  desserts: object = [];
+  desserts: Array<Object> = [];
   created() {
     this.getPatientAll();
   }
@@ -72,6 +74,7 @@ export default class PatientManagement extends Vue {
       .then(data => data.data)
       .then(({ patients }) => {
         this.desserts = patients.entry;
+        this.loading = false;
       })
       .catch(data => {
         this.$toasted.show(`資料讀取失敗，請重新登入`, {
@@ -82,6 +85,44 @@ export default class PatientManagement extends Vue {
         this.userLogout();
         this.$router.push("/login");
       });
+  }
+
+  deleteItem(item: any) {
+    var selectedPatientID = item.id;
+    const index = this.desserts.indexOf(item);
+    if (confirm("確定要刪除這個帳號嗎?")) {
+      var api = "/patient/" + selectedPatientID;
+      this.axios
+        .delete(api)
+        .then(data => data.data)
+        .then(({ ok }) => {
+          this.desserts.splice(index, 1);
+          this.$toasted.show(`刪除成功`, {
+            type: "success",
+            position: "top-right",
+            duration: 3000
+          });
+        })
+        .catch(data => {
+          this.$toasted.show(`刪除失敗，請重新刪除一次`, {
+            type: "error",
+            position: "top-right",
+            duration: 3000
+          });
+        });
+    }
+  }
+  showItem(item: any) {
+    this.$router.push({
+      path: "/admin/patientmanagement/patientmanagementform",
+      query: { action: "show", id: item["id"], item: item }
+    });
+  }
+  editItem(item: any) {
+    this.$router.push({
+      path: "/admin/patientmanagement/patientmanagementform",
+      query: { action: "edit", id: item["id"], item: item }
+    });
   }
 }
 </script>

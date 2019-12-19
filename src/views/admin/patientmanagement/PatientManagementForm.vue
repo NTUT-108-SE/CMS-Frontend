@@ -4,11 +4,11 @@
       <v-col md="6">
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
-            <v-toolbar-title>新增病人</v-toolbar-title>
+            <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-container>
-              <v-form class="py-3">
+              <v-form class="py-3" ref="form" v-model="valid" lazy-validation>
                 <v-row justify="">
                   <v-col md="6">
                     <v-text-field
@@ -22,6 +22,7 @@
                       clearable
                       dense
                       outlined
+                      :disabled="disableActive || disableActiveByEdit"
                     ></v-text-field>
                   </v-col>
                   <v-col md="6">
@@ -43,6 +44,7 @@
                           v-on="on"
                           dense
                           outlined
+                          :disabled="disableActive || disableActiveByEdit"
                         ></v-text-field>
                       </template>
                       <v-date-picker
@@ -75,6 +77,7 @@
                       clearable
                       dense
                       outlined
+                      :disabled="disableActive"
                     ></v-text-field>
                   </v-col>
                   <v-col md="6">
@@ -86,6 +89,7 @@
                       clearable
                       dense
                       outlined
+                      :disabled="disableActive"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -95,11 +99,13 @@
                       v-model="genderText"
                       prepend-icon="mdi-gender-non-binary"
                       :items="gender"
-                      :rules="[() => !!genderText || '必須填入']"
+                      item-text="text"
+                      item-value="state"
                       label="性別"
                       required
                       dense
                       outlined
+                      :disabled="disableActive"
                     ></v-select>
                   </v-col>
                   <v-col md="6">
@@ -112,6 +118,7 @@
                       required
                       dense
                       outlined
+                      :disabled="disableActive"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -128,6 +135,7 @@
                       clearable
                       dense
                       outlined
+                      :disabled="disableActive"
                     ></v-text-field>
                   </v-col>
                   <v-col md="6">
@@ -139,6 +147,7 @@
                       clearable
                       dense
                       outlined
+                      :disabled="disableActive"
                     ></v-textarea>
                   </v-col>
                 </v-row>
@@ -148,7 +157,7 @@
                     dark
                     color="primary"
                     @click="submit"
-                    v-if="action == 'add'"
+                    v-if="buttonAction == 'add'"
                   >
                     <v-icon left>mdi-send-check</v-icon>
                     送出
@@ -158,7 +167,7 @@
                     dark
                     color="primary"
                     @click="edit"
-                    v-else-if="action === 'edit'"
+                    v-else-if="buttonAction === 'edit'"
                   >
                     <v-icon left>mdi-send-check</v-icon>
                     編輯
@@ -168,7 +177,7 @@
                     @click="close"
                     dark
                     color="red"
-                    v-else-if="action === 'close'"
+                    v-else-if="buttonAction === 'close'"
                   >
                     <v-icon left>mdi-close </v-icon>
                     關閉
@@ -176,7 +185,7 @@
                   <v-btn
                     class="mx-12"
                     @click="clear"
-                    v-if="action != 'close'"
+                    v-if="buttonAction != 'close'"
                     dark
                     color="secondary"
                   >
@@ -198,7 +207,12 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component
 export default class PatientManagementForm extends Vue {
+  private valid: Boolean = true;
+  private disableActive: Boolean = false;
+  private disableActiveByEdit: Boolean = false;
   private formTitle: string = "新增病人";
+  private editAPI: string = "";
+  private birthMenu: boolean = false;
   identifier: string = "";
   firstName: string = "";
   lastName: string = "";
@@ -207,18 +221,14 @@ export default class PatientManagementForm extends Vue {
   telephone: string = "";
   address: string = "";
   birthDate: string = "";
-  action: string = "add";
-  gender: Object = ["男", "女", "其他", "不願提供"];
+  buttonAction: string = "add";
+  gender: Object = [
+    { text: "男", state: "male" },
+    { text: "女", state: "female" },
+    { text: "其他", state: "other" },
+    { text: "不願提供", state: "unknown" }
+  ];
   maritalStatus: Object = ["未婚", "已婚", "離婚", "喪偶", "不願提供"];
-  data() {
-    return {
-      picker: new Date().toISOString().substr(0, 10),
-      treatDate: new Date().toISOString().substr(0, 10),
-      birthDate: "",
-      treatMenu: false,
-      birthMenu: false
-    };
-  }
   clear() {
     this.identifier = "";
     this.firstName = "";
@@ -228,22 +238,122 @@ export default class PatientManagementForm extends Vue {
     this.telephone = "";
     this.address = "";
     this.birthDate = "";
-    this.gender = ["男", "女", "其他", "不願提供"];
-    this.maritalStatus = ["未婚", "已婚", "離婚", "喪偶", "不願提供"];
   }
   created() {
     if (this.$route.query.action == "show") {
       this.formTitle = "顯示病人資料";
+      this.disableActive = true;
+      this.buttonAction = "close";
       this.getShowData();
-      // this.activeForm = true;
-      // this.buttionAction = "close";
     } else if (this.$route.query.action == "edit") {
       this.formTitle = "更新病人權限";
-      // this.buttionAction = "edit";
+      this.disableActiveByEdit = true;
+      this.buttonAction = "edit";
       this.getShowData();
     }
   }
 
-  getShowData() {}
+  getShowData() {
+    this.editAPI = "/patient/" + this.$route.query.id;
+    this.axios
+      .get(this.editAPI)
+      .then(data => data.data)
+      .then(({ patient }) => {
+        this.address = patient.address;
+        this.birthDate = patient.birthDate;
+        this.firstName = patient.family;
+        this.genderText = patient.gender;
+        this.lastName = patient.given;
+        this.identifier = patient.identifier;
+        this.maritalText = patient.maritalStatus;
+        this.telephone = patient.phone;
+      })
+      .catch(data => {
+        this.$toasted.show(`資料讀取失敗，請重新整理一次`, {
+          type: "error",
+          position: "top-right",
+          duration: 3000
+        });
+      });
+  }
+
+  submit(): void {
+    if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
+      this.axios
+        .post(
+          "/patient",
+          JSON.stringify({
+            address: this.address,
+            birthDate: this.birthDate,
+            family: this.firstName,
+            gender: this.genderText,
+            given: this.lastName,
+            identifier: this.identifier,
+            maritalStatus: this.maritalText,
+            phone: this.telephone
+          })
+        )
+        .then(data => data.data)
+        .then(({ ok }) => {
+          this.$toasted.show(`新增成功`, {
+            type: "success",
+            position: "top-right",
+            duration: 3000
+          });
+          this.$router.push({
+            path: "/admin/patientmanagement/patientmanagement"
+          });
+        })
+        .catch(data => {
+          this.$toasted.show(`新增失敗`, {
+            type: "error",
+            position: "top-right",
+            duration: 3000
+          });
+        });
+    }
+  }
+
+  close() {
+    this.$router.push({
+      path: "/admin/patientmanagement/patientmanagement"
+    });
+  }
+  edit() {
+    if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
+      this.axios
+        .put(
+          this.editAPI,
+          JSON.stringify({
+            address: this.address,
+            birthDate: this.birthDate,
+            family: this.firstName,
+            gender: this.genderText,
+            given: this.lastName,
+            identifier: this.identifier,
+            maritalStatus: this.maritalText,
+            phone: this.telephone
+          })
+        )
+        .then(data => data.data)
+        .then(({ ok }) => {
+          this.$toasted.show(`更新成功`, {
+            type: "success",
+            position: "top-right",
+            duration: 3000
+          });
+          this.$router.push({
+            path: "/admin/patientmanagement/patientmanagement"
+          });
+        })
+        .catch(data => {
+          this.$toasted.show(`更新失敗`, {
+            type: "error",
+            position: "top-right",
+            duration: 3000
+          });
+        });
+    }
+  }
 }
 </script>
