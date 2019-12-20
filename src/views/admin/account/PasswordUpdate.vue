@@ -69,12 +69,6 @@
                     ></v-text-field>
                   </v-col>
                 </v-row>
-                <v-overlay :value="overlay">
-                  <v-progress-circular
-                    indeterminate
-                    size="64"
-                  ></v-progress-circular>
-                </v-overlay>
                 <v-row justify="center">
                   <v-btn class="mx-4" dark color="primary" @click="update">
                     <v-icon left>mdi-send-check</v-icon>
@@ -102,11 +96,11 @@ import { User } from "@/store/modules/user/types";
 export default class PasswordUpdate extends Vue {
   @State("user", { namespace: "User" }) user!: User;
   @Mutation("User/UserLogout") userLogout!: Function;
+  @Mutation("Loader/setOverLay") setOverLay!: Function;
   private oldUserPassword: string = "";
   private againNewUserPassword: string = "";
   private newUserPassword: string = "";
   private valid: Boolean = true;
-  private overlay: Boolean = false;
 
   clear() {
     this.oldUserPassword = "";
@@ -115,7 +109,7 @@ export default class PasswordUpdate extends Vue {
   }
   update() {
     if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
-      this.overlay = true;
+      this.setOverLay(true);
       this.axios
         .post(
           "/user/change_password",
@@ -129,7 +123,7 @@ export default class PasswordUpdate extends Vue {
           this.serverLogout();
         })
         .catch(data => {
-          this.overlay = false;
+          this.setOverLay(false);
           this.$toasted.show(`更新失敗`, {
             type: "error",
             position: "top-right",
@@ -143,13 +137,13 @@ export default class PasswordUpdate extends Vue {
       .get("/logout")
       .then(data => data.data)
       .then(({ ok }) => {
-        this.$toasted.show(`請重新登入`, {
+        this.$toasted.show(`更新成功 ，請重新登入`, {
           type: "success",
           position: "top-right",
           duration: 3000
         });
         this.userLogout();
-        this.overlay = false;
+        this.setOverLay(false);
         this.$router.push("/login");
       })
       .catch(data => {});

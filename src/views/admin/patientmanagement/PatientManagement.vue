@@ -48,6 +48,7 @@ export default class PatientManagement extends Vue {
   @State("user", { namespace: "User" }) user!: User;
   @Mutation("User/UserLogout") userLogout!: Function;
   @Mutation("Patient/storePatient") storePatient!: Function;
+  @State("patient", { namespace: "Patient" }) patient!: Object;
   private loading: Boolean = true;
   search: string = "";
   headers: Object = [

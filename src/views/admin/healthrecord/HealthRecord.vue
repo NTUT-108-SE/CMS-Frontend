@@ -33,20 +33,19 @@
         </v-data-table>
       </v-col>
     </v-row>
-    <v-overlay :value="overlay">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
   </v-container>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-
+import { State, Mutation } from "vuex-class";
 @Component
 export default class HealthRecord extends Vue {
+  @Mutation("Loader/setOverLay") setOverLay!: Function;
+  @Mutation("HealthRecord/storeHealthRecord") storeHealthRecord!: Function;
+  @State("healthrecord", { namespace: "HealthRecord" }) healthrecord!: Object;
   private search: string = "";
   private loading: Boolean = true;
-  private overlay: Boolean = false;
   private headers: Object = [
     { text: "病歷號碼", value: "id" },
     { text: "身分證", value: "identifier" },
@@ -63,11 +62,17 @@ export default class HealthRecord extends Vue {
         this.desserts = healthrecords["entry"];
         this.loading = false;
       })
-      .catch(data => {});
+      .catch(data => {
+        this.$toasted.show(`資料讀取失敗，請重新整理`, {
+          type: "error",
+          position: "top-right",
+          duration: 3000
+        });
+      });
   }
   deleteItem(item: any) {
     if (confirm("確定要刪除這個病歷嗎?")) {
-      this.overlay = true;
+      this.setOverLay(true);
       const index = this.desserts.indexOf(item);
       var order = "/healthrecord/" + item["id"];
       this.axios
@@ -75,7 +80,7 @@ export default class HealthRecord extends Vue {
         .then(data => data.data)
         .then(({ ok }) => {
           this.desserts.splice(index, 1);
-          this.overlay = false;
+          this.setOverLay(false);
           this.$toasted.show(`刪除成功`, {
             type: "success",
             position: "top-right",
@@ -83,7 +88,7 @@ export default class HealthRecord extends Vue {
           });
         })
         .catch(data => {
-          this.overlay = false;
+          this.setOverLay(false);
           this.$toasted.show(`刪除失敗，請重新刪除一次`, {
             type: "error",
             position: "top-right",
@@ -93,6 +98,7 @@ export default class HealthRecord extends Vue {
     }
   }
   showItem(item: any) {
+    this.storeHealthRecord(item);
     this.$router.push({
       path: "/admin/healthrecord/healthrecordform",
       query: { action: "show", id: item["id"] }
