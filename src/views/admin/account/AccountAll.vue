@@ -129,18 +129,5 @@ export default class AccountAll extends Vue {
       query: { action: "edit", id: item["id"] }
     });
   }
-
-  getSelectedPatientInfo(item: any): object {
-    return {
-      address: item.address,
-      birthDate: item.birthDate,
-      firstName: item.family,
-      genderText: item.gender,
-      lastName: item.given,
-      identifier: item.identifier,
-      maritalText: item.maritalStatus,
-      telephone: item.phone
-    };
-  }
 }
 </script>
