@@ -259,39 +259,41 @@ export default class AccountForm extends Vue {
   }
 
   edit() {
-    this.setOverLay(true);
-    var order = "/user/" + this.$route.query.id;
-    var role;
-    if (this.permissionText == "管理員") role = "Admin";
-    else if (this.permissionText == "醫生") role = "Doctor";
-    else role = "Nurse";
-    this.axios
-      .post(
-        order,
-        JSON.stringify({
-          role: role
+    if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
+      this.setOverLay(true);
+      var order = "/user/" + this.$route.query.id;
+      var role;
+      if (this.permissionText == "管理員") role = "Admin";
+      else if (this.permissionText == "醫生") role = "Doctor";
+      else role = "Nurse";
+      this.axios
+        .post(
+          order,
+          JSON.stringify({
+            role: role
+          })
+        )
+        .then(data => data.data)
+        .then(({ ok }) => {
+          this.$toasted.show(`更新成功`, {
+            type: "success",
+            position: "top-right",
+            duration: 3000
+          });
+          this.setOverLay(false);
+          this.$router.push({
+            path: "/admin/account/accountall"
+          });
         })
-      )
-      .then(data => data.data)
-      .then(({ ok }) => {
-        this.$toasted.show(`更新成功`, {
-          type: "success",
-          position: "top-right",
-          duration: 3000
+        .catch(data => {
+          this.setOverLay(false);
+          this.$toasted.show(`新增失敗`, {
+            type: "error",
+            position: "top-right",
+            duration: 3000
+          });
         });
-        this.setOverLay(false);
-        this.$router.push({
-          path: "/admin/account/accountall"
-        });
-      })
-      .catch(data => {
-        this.setOverLay(false);
-        this.$toasted.show(`新增失敗`, {
-          type: "error",
-          position: "top-right",
-          duration: 3000
-        });
-      });
+    }
   }
   clear() {
     this.email = "";

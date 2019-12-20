@@ -170,7 +170,7 @@
                     v-else-if="buttonAction === 'edit'"
                   >
                     <v-icon left>mdi-send-check</v-icon>
-                    編輯
+                    更新
                   </v-btn>
                   <v-btn
                     class="mx-12"
@@ -234,14 +234,23 @@ export default class PatientManagementForm extends Vue {
   ];
   maritalStatus: Object = ["未婚", "已婚", "離婚", "喪偶", "不願提供"];
   clear() {
-    this.identifier = "";
-    this.firstName = "";
-    this.lastName = "";
-    this.genderText = "";
-    this.maritalText = "";
-    this.telephone = "";
-    this.address = "";
-    this.birthDate = "";
+    if (this.disableActiveByEdit) {
+      this.firstName = "";
+      this.lastName = "";
+      this.genderText = "";
+      this.maritalText = "";
+      this.telephone = "";
+      this.address = "";
+    } else {
+      this.identifier = "";
+      this.firstName = "";
+      this.lastName = "";
+      this.genderText = "";
+      this.maritalText = "";
+      this.telephone = "";
+      this.address = "";
+      this.birthDate = "";
+    }
   }
   created() {
     if (this.$route.query.action == "show") {
@@ -250,7 +259,7 @@ export default class PatientManagementForm extends Vue {
       this.buttonAction = "close";
       this.getShowData();
     } else if (this.$route.query.action == "edit") {
-      this.formTitle = "更新病人權限";
+      this.formTitle = "更新病人資料";
       this.disableActiveByEdit = true;
       this.buttonAction = "edit";
       this.getShowData();
@@ -270,6 +279,7 @@ export default class PatientManagementForm extends Vue {
 
   submit(): void {
     if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
+      this.setOverLay(true);
       this.axios
         .post(
           "/patient",
@@ -286,6 +296,7 @@ export default class PatientManagementForm extends Vue {
         )
         .then(data => data.data)
         .then(({ ok }) => {
+          this.setOverLay(false);
           this.$toasted.show(`新增成功`, {
             type: "success",
             position: "top-right",
@@ -296,6 +307,7 @@ export default class PatientManagementForm extends Vue {
           });
         })
         .catch(data => {
+          this.setOverLay(false);
           this.$toasted.show(`新增失敗`, {
             type: "error",
             position: "top-right",
@@ -312,6 +324,8 @@ export default class PatientManagementForm extends Vue {
   }
   edit() {
     if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
+      this.setOverLay(true);
+      this.editAPI = "/patient/" + this.$route.query.id;
       this.axios
         .put(
           this.editAPI,
@@ -328,6 +342,7 @@ export default class PatientManagementForm extends Vue {
         )
         .then(data => data.data)
         .then(({ ok }) => {
+          this.setOverLay(false);
           this.$toasted.show(`更新成功`, {
             type: "success",
             position: "top-right",
@@ -338,6 +353,7 @@ export default class PatientManagementForm extends Vue {
           });
         })
         .catch(data => {
+          this.setOverLay(false);
           this.$toasted.show(`更新失敗`, {
             type: "error",
             position: "top-right",

@@ -46,6 +46,7 @@ import { User } from "@/store/modules/user/types";
 @Component
 export default class PatientManagement extends Vue {
   @State("user", { namespace: "User" }) user!: User;
+  @Mutation("Loader/setOverLay") setOverLay!: Function;
   @Mutation("User/UserLogout") userLogout!: Function;
   @Mutation("Patient/storePatient") storePatient!: Function;
   @State("patient", { namespace: "Patient" }) patient!: Object;
@@ -93,12 +94,14 @@ export default class PatientManagement extends Vue {
     var selectedPatientID = item.id;
     const index = this.desserts.indexOf(item);
     if (confirm("確定要刪除這個病人資料嗎?")) {
+      this.setOverLay(true);
       var api = "/patient/" + selectedPatientID;
       this.axios
         .delete(api)
         .then(data => data.data)
         .then(({ ok }) => {
           this.desserts.splice(index, 1);
+          this.setOverLay(false);
           this.$toasted.show(`刪除成功`, {
             type: "success",
             position: "top-right",
@@ -106,6 +109,7 @@ export default class PatientManagement extends Vue {
           });
         })
         .catch(data => {
+          this.setOverLay(false);
           this.$toasted.show(`刪除失敗，請重新刪除一次`, {
             type: "error",
             position: "top-right",

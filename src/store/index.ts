@@ -17,7 +17,7 @@ const store: StoreOptions<RootState> = {
   state: {
     version: "1.0.0"
   },
-  modules: { Dashboard, User, Loader, Patient ,HealthRecord},
+  modules: { Dashboard, User, Loader, Patient, HealthRecord },
   plugins: [vuexLocal.plugin]
 };
 

@@ -92,7 +92,7 @@ export default class Login extends Vue {
           duration: 3000
         });
         this.userLoaded(user);
-        
+
         this.$router.push({ name: "admin" });
       })
       .catch(data => {
