@@ -24,6 +24,7 @@ import { State, Mutation } from "vuex-class";
 export default class Layout extends Vue {
   @State("user", { namespace: "User" }) user!: Object;
   @Mutation("User/UserLogout") userLogout!: Function;
+  @Mutation("Loader/setOverLay") setOverLay!: Function;
   beforeRouteEnter(to: any, from: any, next: (vm: any) => void) {
     next((vm: any) => {
       if (vm.user == undefined) {
@@ -39,6 +40,7 @@ export default class Layout extends Vue {
       })
       .catch(data => {
         this.userLogout();
+        this.setOverLay(false);
         this.$toasted.show(`登入失效，請重新登入`, {
           type: "error",
           position: "top-right",
