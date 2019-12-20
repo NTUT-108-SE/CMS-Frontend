@@ -57,7 +57,7 @@ export default class PatientManagement extends Vue {
     },
     { text: "身分證", value: "identifier" },
     { text: "姓氏", value: "family" },
-    { text: "名子", value: "given" },
+    { text: "名字", value: "given" },
     { text: "性別", value: "gender" },
     { text: "出生年月日", value: "birthDate" },
     { text: "電話", value: "phone" },
@@ -90,7 +90,7 @@ export default class PatientManagement extends Vue {
   deleteItem(item: any) {
     var selectedPatientID = item.id;
     const index = this.desserts.indexOf(item);
-    if (confirm("確定要刪除這個帳號嗎?")) {
+    if (confirm("確定要刪除這個病人資料嗎?")) {
       var api = "/patient/" + selectedPatientID;
       this.axios
         .delete(api)
