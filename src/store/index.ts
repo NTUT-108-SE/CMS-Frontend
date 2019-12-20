@@ -3,6 +3,7 @@ import Vuex, { StoreOptions } from "vuex";
 import { RootState } from "./types";
 import { Dashboard } from "./modules/dashboard/index";
 import { User } from "./modules/user/index";
+import { Loader } from "./modules/loader/index";
 import VuexPersistence from "vuex-persist";
 
 Vue.use(Vuex);
@@ -14,7 +15,7 @@ const store: StoreOptions<RootState> = {
   state: {
     version: "1.0.0"
   },
-  modules: { Dashboard, User },
+  modules: { Dashboard, User, Loader },
   plugins: [vuexLocal.plugin]
 };
 
