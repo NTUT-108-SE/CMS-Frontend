@@ -31,10 +31,12 @@ export default class Layout extends Vue {
       }
     });
   }
-  beforeRouteUpdate() {
+  beforeRouteUpdate(to: any, form: any, next: any) {
     this.axios
       .get("/check")
-      .then(data => data.data)
+      .then(data => {
+        next();
+      })
       .catch(data => {
         this.userLogout();
         this.$toasted.show(`登入失效，請重新登入`, {
