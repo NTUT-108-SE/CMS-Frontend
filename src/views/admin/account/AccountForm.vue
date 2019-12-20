@@ -101,12 +101,6 @@
                     ></v-textarea>
                   </v-col>
                 </v-row>
-                <v-overlay :value="overlay">
-                  <v-progress-circular
-                    indeterminate
-                    size="64"
-                  ></v-progress-circular>
-                </v-overlay>
                 <v-row justify="center">
                   <v-btn
                     class="mx-12"
@@ -160,9 +154,10 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-
+import { State, Mutation } from "vuex-class";
 @Component
 export default class AccountForm extends Vue {
+  @Mutation("Loader/setOverLay") setOverLay!: Function;
   private formTitle: string = "新增帳號";
   private activeForm: Boolean = false;
   private email: string = "";
@@ -174,7 +169,6 @@ export default class AccountForm extends Vue {
   private permissionText: string = "";
   private permission: Object = ["醫生", "護理師", "管理員"];
   private valid: Boolean = true;
-  private overlay: Boolean = false;
   created() {
     if (this.$route.query.action == "show") {
       this.formTitle = "顯示帳號資料";
@@ -188,7 +182,7 @@ export default class AccountForm extends Vue {
     }
   }
   getShowData() {
-    this.overlay = true;
+    this.setOverLay(true);
     var order = "/user/" + this.$route.query.id;
     this.axios
       .get(order)
@@ -206,9 +200,10 @@ export default class AccountForm extends Vue {
             : user.introduction;
         this.imageUrl =
           user.image === null || user.image === "" ? "無照片" : user.image;
-        this.overlay = false;
+        this.setOverLay(false);
       })
       .catch(data => {
+        this.setOverLay(false);
         this.$toasted.show(`資料讀取失敗，請重新整理一次`, {
           type: "error",
           position: "top-right",
@@ -223,7 +218,7 @@ export default class AccountForm extends Vue {
   }
   submit(): void {
     if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
-      this.overlay = true;
+      this.setOverLay(true);
       var role;
       if (this.permissionText == "管理員") role = "Admin";
       else if (this.permissionText == "醫生") role = "Doctor";
@@ -247,13 +242,13 @@ export default class AccountForm extends Vue {
             position: "top-right",
             duration: 3000
           });
-          this.overlay = false;
+          this.setOverLay(false);
           this.$router.push({
             path: "/admin/account/accountall"
           });
         })
         .catch(data => {
-          this.overlay = false;
+          this.setOverLay(false);
           this.$toasted.show(`新增失敗`, {
             type: "error",
             position: "top-right",
@@ -264,7 +259,7 @@ export default class AccountForm extends Vue {
   }
 
   edit() {
-    this.overlay = true;
+    this.setOverLay(true);
     var order = "/user/" + this.$route.query.id;
     var role;
     if (this.permissionText == "管理員") role = "Admin";
@@ -284,13 +279,13 @@ export default class AccountForm extends Vue {
           position: "top-right",
           duration: 3000
         });
-        this.overlay = false;
+        this.setOverLay(false);
         this.$router.push({
           path: "/admin/account/accountall"
         });
       })
       .catch(data => {
-        this.overlay = false;
+        this.setOverLay(false);
         this.$toasted.show(`新增失敗`, {
           type: "error",
           position: "top-right",
