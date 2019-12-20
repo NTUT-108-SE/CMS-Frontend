@@ -204,9 +204,10 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-
+import { State, Mutation } from "vuex-class";
 @Component
 export default class PatientManagementForm extends Vue {
+  @Mutation("Loader/setOverLay") setOverLay!: Function;
   private valid: Boolean = true;
   private disableActive: Boolean = false;
   private disableActiveByEdit: Boolean = false;
@@ -254,6 +255,16 @@ export default class PatientManagementForm extends Vue {
   }
 
   getShowData() {
+    // this.setOverLay(true);
+    var patientInfo = JSON.parse(this.$route.query.patientInfo + "");
+    this.address = patientInfo.address;
+    this.birthDate = patientInfo.birthDate;
+    this.firstName = patientInfo.family;
+    this.genderText = patientInfo.gender;
+    this.lastName = patientInfo.given;
+    this.identifier = patientInfo.identifier;
+    this.maritalText = patientInfo.maritalStatus;
+    this.telephone = patientInfo.phone;
     this.editAPI = "/patient/" + this.$route.query.id;
     this.axios
       .get(this.editAPI)
@@ -274,6 +285,9 @@ export default class PatientManagementForm extends Vue {
           position: "top-right",
           duration: 3000
         });
+      })
+      .then(() => {
+        this.setOverLay(false);
       });
   }
 

@@ -115,13 +115,21 @@ export default class PatientManagement extends Vue {
   showItem(item: any) {
     this.$router.push({
       path: "/admin/patientmanagement/patientmanagementform",
-      query: { action: "show", id: item["id"], item: item }
+      query: {
+        action: "show",
+        id: item["id"],
+        patientInfo: JSON.stringify(item)
+      }
     });
   }
   editItem(item: any) {
     this.$router.push({
       path: "/admin/patientmanagement/patientmanagementform",
-      query: { action: "edit", id: item["id"], item: item }
+      query: {
+        action: "edit",
+        id: item["id"],
+        patientInfo: JSON.stringify(item)
+      }
     });
   }
 }
