@@ -32,12 +32,7 @@
                     ></v-text-field>
                   </v-col>
                 </v-row>
-                <v-overlay :value="overlay">
-                  <v-progress-circular
-                    indeterminate
-                    size="64"
-                  ></v-progress-circular>
-                </v-overlay>
+
                 <v-row justify="center">
                   <v-col md="12">
                     <v-textarea
@@ -77,11 +72,11 @@ import { User } from "@/store/modules/user/types";
 export default class AccountSet extends Vue {
   @State("user", { namespace: "User" }) user!: User;
   @Mutation("User/UserLoaded") userLoaded!: Function;
+  @Mutation("Loader/setOverLay") setOverLay!: Function;
   private introduction: String | null = "";
   private imageUrl: String | null = "";
   private name: String = "";
   private valid: Boolean = true;
-  private overlay: Boolean = false;
   clear() {
     this.introduction = "";
     this.imageUrl = "";
@@ -89,7 +84,7 @@ export default class AccountSet extends Vue {
   }
   update() {
     if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
-      this.overlay = true;
+      this.setOverLay(true);
       this.axios
         .put(
           "/user",
@@ -106,12 +101,12 @@ export default class AccountSet extends Vue {
             position: "top-right",
             duration: 3000
           });
-          this.overlay = false;
           this.userLoaded(user);
+          this.setOverLay(false);
           this.$router.push({ name: "login" });
         })
         .catch(data => {
-          this.overlay = false;
+          this.setOverLay(false);
           this.$toasted.show(`更新失敗`, {
             type: "error",
             position: "top-right",
