@@ -254,6 +254,7 @@ export default class PatientManagementForm extends Vue {
   }
 
   getShowData() {
+    console.log(this.$route.query.patientInfo.id);
     this.editAPI = "/patient/" + this.$route.query.id;
     this.axios
       .get(this.editAPI)
@@ -262,7 +263,7 @@ export default class PatientManagementForm extends Vue {
         this.address = patient.address;
         this.birthDate = patient.birthDate;
         this.firstName = patient.family;
-        this.genderText = patient.gender;
+        this.genderText = patient.gencpmder;
         this.lastName = patient.given;
         this.identifier = patient.identifier;
         this.maritalText = patient.maritalStatus;
