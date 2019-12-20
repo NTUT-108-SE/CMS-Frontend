@@ -32,6 +32,12 @@
                     ></v-text-field>
                   </v-col>
                 </v-row>
+                <v-overlay :value="overlay">
+                  <v-progress-circular
+                    indeterminate
+                    size="64"
+                  ></v-progress-circular>
+                </v-overlay>
                 <v-row justify="center">
                   <v-col md="12">
                     <v-textarea
@@ -70,10 +76,12 @@ import { User } from "@/store/modules/user/types";
 @Component
 export default class AccountSet extends Vue {
   @State("user", { namespace: "User" }) user!: User;
+  @Mutation("User/UserLoaded") userLoaded!: Function;
   private introduction: String | null = "";
   private imageUrl: String | null = "";
   private name: String = "";
   private valid: Boolean = true;
+  private overlay: Boolean = false;
   clear() {
     this.introduction = "";
     this.imageUrl = "";
@@ -81,6 +89,7 @@ export default class AccountSet extends Vue {
   }
   update() {
     if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
+      this.overlay = true;
       this.axios
         .put(
           "/user",
@@ -90,18 +99,19 @@ export default class AccountSet extends Vue {
             introduction: this.introduction
           })
         )
-        .then(data => data.data)
-        .then(({ ok }) => {
+        .then(data => data.data) //
+        .then(({ user }) => {
           this.$toasted.show(`更新成功`, {
             type: "success",
             position: "top-right",
             duration: 3000
           });
-          this.$router.push({
-            path: "/admin/account/accountall"
-          });
+          this.overlay = false;
+          this.userLoaded(user);
+          this.$router.push({ name: "login" });
         })
         .catch(data => {
+          this.overlay = false;
           this.$toasted.show(`更新失敗`, {
             type: "error",
             position: "top-right",
@@ -110,7 +120,6 @@ export default class AccountSet extends Vue {
         });
     }
   }
-
   created() {
     this.getUser();
   }
