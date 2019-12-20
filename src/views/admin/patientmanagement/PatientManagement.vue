@@ -47,6 +47,8 @@ import { User } from "@/store/modules/user/types";
 export default class PatientManagement extends Vue {
   @State("user", { namespace: "User" }) user!: User;
   @Mutation("User/UserLogout") userLogout!: Function;
+  @Mutation("Patient/storePatient") storePatient!: Function;
+  @State("patient", { namespace: "Patient" }) patient!: Object;
   private loading: Boolean = true;
   search: string = "";
   headers: Object = [
@@ -113,12 +115,13 @@ export default class PatientManagement extends Vue {
     }
   }
   showItem(item: any) {
+    this.storePatient(item);
     this.$router.push({
       path: "/admin/patientmanagement/patientmanagementform",
       query: {
         action: "show",
-        id: item["id"],
-        patientInfo: JSON.stringify(item)
+        id: item["id"]
+        //patientInfo: JSON.stringify(item)
       }
     });
   }

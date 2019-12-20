@@ -9,7 +9,7 @@
           <v-card-text>
             <v-container>
               <v-form class="py-3" ref="form" v-model="valid" lazy-validation>
-                <v-row justify="">
+                <v-row justify="center">
                   <v-col md="6">
                     <v-text-field
                       label="身分證"
@@ -67,7 +67,7 @@
                     </v-menu>
                   </v-col>
                 </v-row>
-                <v-row justify="">
+                <v-row justify="center">
                   <v-col md="6">
                     <v-text-field
                       label="姓氏"
@@ -93,7 +93,7 @@
                     ></v-text-field>
                   </v-col>
                 </v-row>
-                <v-row justify="">
+                <v-row justify="center">
                   <v-col md="6">
                     <v-select
                       v-model="genderText"
@@ -122,7 +122,7 @@
                     ></v-select>
                   </v-col>
                 </v-row>
-                <v-row justify="">
+                <v-row justify="center">
                   <v-col md="6">
                     <v-text-field
                       label="電話"
@@ -151,7 +151,7 @@
                     ></v-textarea>
                   </v-col>
                 </v-row>
-                <v-row justify="center pb-3">
+                <v-row justify="center">
                   <v-btn
                     class="mx-12"
                     dark
@@ -205,9 +205,12 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import { State, Mutation } from "vuex-class";
+import { Patient } from "@/store/modules/patient/types";
 @Component
 export default class PatientManagementForm extends Vue {
   @Mutation("Loader/setOverLay") setOverLay!: Function;
+  @State("patient", { namespace: "Patient" }) patient!: Patient;
+  @Mutation("Patient/deletePatient") deletePatient!: Function;
   private valid: Boolean = true;
   private disableActive: Boolean = false;
   private disableActiveByEdit: Boolean = false;
@@ -256,39 +259,47 @@ export default class PatientManagementForm extends Vue {
 
   getShowData() {
     // this.setOverLay(true);
-    var patientInfo = JSON.parse(this.$route.query.patientInfo + "");
-    this.address = patientInfo.address;
-    this.birthDate = patientInfo.birthDate;
-    this.firstName = patientInfo.family;
-    this.genderText = patientInfo.gender;
-    this.lastName = patientInfo.given;
-    this.identifier = patientInfo.identifier;
-    this.maritalText = patientInfo.maritalStatus;
-    this.telephone = patientInfo.phone;
-    this.editAPI = "/patient/" + this.$route.query.id;
-    this.axios
-      .get(this.editAPI)
-      .then(data => data.data)
-      .then(({ patient }) => {
-        this.address = patient.address;
-        this.birthDate = patient.birthDate;
-        this.firstName = patient.family;
-        this.genderText = patient.gender;
-        this.lastName = patient.given;
-        this.identifier = patient.identifier;
-        this.maritalText = patient.maritalStatus;
-        this.telephone = patient.phone;
-      })
-      .catch(data => {
-        this.$toasted.show(`資料讀取失敗，請重新整理一次`, {
-          type: "error",
-          position: "top-right",
-          duration: 3000
-        });
-      })
-      .then(() => {
-        this.setOverLay(false);
-      });
+    // var patientInfo = JSON.parse(this.$route.query.patientInfo + "");
+    // this.address = patientInfo.address;
+    // this.birthDate = patientInfo.birthDate;
+    // this.firstName = patientInfo.family;
+    // this.genderText = patientInfo.gender;
+    // this.lastName = patientInfo.given;
+    // this.identifier = patientInfo.identifier;
+    // this.maritalText = patientInfo.maritalStatus;
+    // this.telephone = patientInfo.phone;
+    // this.editAPI = "/patient/" + this.$route.query.id;
+    // this.axios
+    //   .get(this.editAPI)
+    //   .then(data => data.data)
+    //   .then(({ patient }) => {
+    //     this.address = patient.address;
+    //     this.birthDate = patient.birthDate;
+    //     this.firstName = patient.family;
+    //     this.genderText = patient.gender;
+    //     this.lastName = patient.given;
+    //     this.identifier = patient.identifier;
+    //     this.maritalText = patient.maritalStatus;
+    //     this.telephone = patient.phone;
+    //   })
+    //   .catch(data => {
+    //     this.$toasted.show(`資料讀取失敗，請重新整理一次`, {
+    //       type: "error",
+    //       position: "top-right",
+    //       duration: 3000
+    //     });
+    //   })
+    //   .then(() => {
+    //     this.setOverLay(false);
+    //   });
+    this.address = String(this.patient.address);
+    this.birthDate = String(this.patient.birthDate);
+    this.firstName = String(this.patient.family);
+    this.genderText = String(this.patient.gender);
+    this.lastName = String(this.patient.given);
+    this.identifier = String(this.patient.identifier);
+    this.maritalText = String(this.patient.maritalStatus);
+    this.telephone = String(this.patient.phone);
   }
 
   submit(): void {
