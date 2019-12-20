@@ -23,10 +23,13 @@
             </v-toolbar>
           </template>
           <template v-slot:item.action="{ item }">
-            <v-icon class="mr-2" @click="deleteItem(item)">
+            <v-icon class="mr-2" v-if="iconActive[0]" @click="editItem(item)">
+              mdi-account-edit-outline
+            </v-icon>
+            <v-icon class="mr-2" v-if="iconActive[1]" @click="deleteItem(item)">
               mdi-delete
             </v-icon>
-            <v-icon class="mr-2" @click="showItem(item)">
+            <v-icon class="mr-2" v-if="iconActive[2]" @click="showItem(item)">
               mdi-file-eye-outline
             </v-icon>
           </template>
@@ -39,11 +42,13 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import { State, Mutation } from "vuex-class";
+import { User } from "@/store/modules/user/types";
 @Component
 export default class HealthRecord extends Vue {
   @Mutation("Loader/setOverLay") setOverLay!: Function;
   @Mutation("HealthRecord/storeHealthRecord") storeHealthRecord!: Function;
   @State("healthrecord", { namespace: "HealthRecord" }) healthrecord!: Object;
+  @State("user", { namespace: "User" }) user!: User;
   private search: string = "";
   private loading: Boolean = true;
   private headers: Object = [
@@ -54,7 +59,12 @@ export default class HealthRecord extends Vue {
     { text: "操作", value: "action", sortable: false }
   ];
   private desserts: Array<Object> = [];
+  private iconActive: Array<Boolean> = [true, true, true];
   created() {
+    if (this.user.role == "Nurse") {
+      this.iconActive[0] = false;
+      this.iconActive[1] = false;
+    }
     this.axios
       .get("/healthrecord/all")
       .then(data => data.data)
@@ -101,7 +111,14 @@ export default class HealthRecord extends Vue {
     this.storeHealthRecord(item);
     this.$router.push({
       path: "/admin/healthrecord/healthrecordform",
-      query: { action: "show", id: item["id"] }
+      query: { action: "show" }
+    });
+  }
+  editItem(item: any) {
+    this.storeHealthRecord(item);
+    this.$router.push({
+      path: "/admin/healthrecord/healthrecordform",
+      query: { action: "edit", id: item["id"] }
     });
   }
 }

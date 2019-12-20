@@ -22,7 +22,7 @@
                       clearable
                       dense
                       outlined
-                      :disabled="activeForm"
+                      :disabled="activeForm || buttionAction == 'edit'"
                       v-on:input="checkID"
                       @click:clear="clearIDAndName"
                     ></v-text-field>
@@ -36,7 +36,11 @@
                       clearable
                       dense
                       outlined
-                      :disabled="activeForm || controlNameActive"
+                      :disabled="
+                        activeForm ||
+                          controlNameActive ||
+                          buttionAction == 'edit'
+                      "
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -82,10 +86,20 @@
                   </v-btn>
                   <v-btn
                     class="mx-12"
+                    dark
+                    color="primary"
+                    @click="edit"
+                    v-if="buttionAction == 'edit'"
+                  >
+                    <v-icon left>mdi-send-check</v-icon>
+                    更新
+                  </v-btn>
+                  <v-btn
+                    class="mx-12"
                     @click="close"
                     dark
                     color="red"
-                    v-else-if="buttionAction != 'add'"
+                    v-if="buttionAction == 'close'"
                   >
                     <v-icon left>mdi-close </v-icon>
                     關閉
@@ -93,7 +107,7 @@
                   <v-btn
                     class="mx-12"
                     @click="clear"
-                    v-if="buttionAction == 'add'"
+                    v-if="buttionAction == 'add' || buttionAction == 'edit'"
                     dark
                     color="secondary"
                   >
@@ -165,13 +179,23 @@ export default class HealthRecordForm extends Vue {
       this.getShowData();
       this.activeForm = true;
       this.buttionAction = "close";
+    } else if (this.$route.query.action == "edit") {
+      this.formTitle = "更新病歷";
+      this.getShowData();
+      this.buttionAction = "edit";
     }
   }
   clear() {
-    this.identifier = "";
-    this.name = "";
-    this.conditionDescription = "";
-    this.medicationDescription = "";
+    if (this.buttionAction == "edit") {
+      this.conditionDescription = "";
+      this.medicationDescription = "";
+    } else if (this.buttionAction == "add") {
+      this.conditionDescription = "";
+      this.medicationDescription = "";
+      this.identifier = "";
+      this.name = "";
+      this.controlNameActive = false;
+    }
   }
   getShowData() {
     this.setOverLay(true);
@@ -185,6 +209,42 @@ export default class HealthRecordForm extends Vue {
     this.$router.push({
       path: "/admin/healthrecord/healthrecord"
     });
+  }
+  edit() {
+    if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
+      this.setOverLay(true);
+      var order = "/healthrecord/" + this.$route.query.id;
+      this.axios
+        .put(
+          order,
+          JSON.stringify({
+            code: this.conditionDescription,
+            medication: this.medicationDescription,
+            identifier: this.identifier,
+            name: this.name
+          })
+        )
+        .then(data => data.data)
+        .then(({ ok }) => {
+          this.setOverLay(false);
+          this.$toasted.show(`更新成功`, {
+            type: "success",
+            position: "top-right",
+            duration: 3000
+          });
+          this.$router.push({
+            path: "/admin/healthrecord/healthrecord"
+          });
+        })
+        .catch(data => {
+          this.setOverLay(false);
+          this.$toasted.show(`更新失敗，請重新確認輸入資料`, {
+            type: "error",
+            position: "top-right",
+            duration: 3000
+          });
+        });
+    }
   }
   submit(): void {
     if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
