@@ -7,7 +7,8 @@ import { RootState } from "@/store/types";
 
 export const state: PatientState = {
   patient: undefined,
-  error: false
+  isEmpty: true
+
 };
 
 const namespaced: boolean = true;

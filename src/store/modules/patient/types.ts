@@ -12,5 +12,5 @@ export interface Patient {
 
 export interface PatientState {
   patient?: Patient;
-  error: Boolean;
+  isEmpty: Boolean;
 }

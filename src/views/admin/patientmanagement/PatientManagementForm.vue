@@ -258,40 +258,6 @@ export default class PatientManagementForm extends Vue {
   }
 
   getShowData() {
-    // this.setOverLay(true);
-    // var patientInfo = JSON.parse(this.$route.query.patientInfo + "");
-    // this.address = patientInfo.address;
-    // this.birthDate = patientInfo.birthDate;
-    // this.firstName = patientInfo.family;
-    // this.genderText = patientInfo.gender;
-    // this.lastName = patientInfo.given;
-    // this.identifier = patientInfo.identifier;
-    // this.maritalText = patientInfo.maritalStatus;
-    // this.telephone = patientInfo.phone;
-    // this.editAPI = "/patient/" + this.$route.query.id;
-    // this.axios
-    //   .get(this.editAPI)
-    //   .then(data => data.data)
-    //   .then(({ patient }) => {
-    //     this.address = patient.address;
-    //     this.birthDate = patient.birthDate;
-    //     this.firstName = patient.family;
-    //     this.genderText = patient.gender;
-    //     this.lastName = patient.given;
-    //     this.identifier = patient.identifier;
-    //     this.maritalText = patient.maritalStatus;
-    //     this.telephone = patient.phone;
-    //   })
-    //   .catch(data => {
-    //     this.$toasted.show(`資料讀取失敗，請重新整理一次`, {
-    //       type: "error",
-    //       position: "top-right",
-    //       duration: 3000
-    //     });
-    //   })
-    //   .then(() => {
-    //     this.setOverLay(false);
-    //   });
     this.address = String(this.patient.address);
     this.birthDate = String(this.patient.birthDate);
     this.firstName = String(this.patient.family);
