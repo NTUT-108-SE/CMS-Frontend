@@ -28,52 +28,6 @@
                     ></v-text-field>
                   </v-col>
                   <v-col md="6">
-                    <v-menu
-                      ref="birthMenu"
-                      v-model="birthMenu"
-                      :close-on-content-click="false"
-                      :return-value.sync="createHealthRecordDate"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="290px"
-                    >
-                      <template v-slot:activator="{ on }">
-                        <v-text-field
-                          v-model="createHealthRecordDate"
-                          :rules="[
-                            () => !!createHealthRecordDate || '必須填入'
-                          ]"
-                          label="看診日期"
-                          prepend-icon="mdi-calendar-blank"
-                          readonly
-                          v-on="on"
-                          dense
-                          outlined
-                          :disabled="activeForm"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="createHealthRecordDate"
-                        no-title
-                        scrollable
-                        min="1919-01-01"
-                      >
-                        <v-spacer></v-spacer>
-                        <v-btn text color="primary" @click="birthMenu = false"
-                          >Cancel</v-btn
-                        >
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="$refs.birthMenu.save(createHealthRecordDate)"
-                          >OK</v-btn
-                        >
-                      </v-date-picker>
-                    </v-menu>
-                  </v-col>
-                </v-row>
-                <v-row justify="center">
-                  <v-col md="6">
                     <v-text-field
                       label="姓名"
                       prepend-icon="mdi-account"
@@ -82,13 +36,11 @@
                       clearable
                       dense
                       outlined
-                      :disabled="activeForm"
+                      :disabled="activeForm || controlNameActive"
                     ></v-text-field>
                   </v-col>
-                  <v-col md="6">
-                    <v-select v-show="false"></v-select>
-                  </v-col>
                 </v-row>
+
                 <v-row justify="center">
                   <v-col md="12">
                     <v-textarea
@@ -117,12 +69,6 @@
                     ></v-textarea>
                   </v-col>
                 </v-row>
-                <v-overlay :value="overlay">
-                  <v-progress-circular
-                    indeterminate
-                    size="64"
-                  ></v-progress-circular>
-                </v-overlay>
                 <v-row justify="center">
                   <v-btn
                     class="mx-12"
@@ -166,28 +112,32 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-
+import { State, Mutation } from "vuex-class";
+import { HealthRecord } from "@/store/modules/healthrecord/types";
 @Component
 export default class HealthRecordForm extends Vue {
+  @Mutation("Loader/setOverLay") setOverLay!: Function;
+  @State("healthrecord", { namespace: "HealthRecord" })
+  healthrecord!: HealthRecord;
+  @Mutation("HealthRecord/deleteHealthRecord") deleteHealthRecord!: Function;
   private formTitle: string = "新增病歷";
   private identifier: string = "";
   private name: string = "";
-  private createHealthRecordDate: string = "";
   private conditionDescription: string = "";
   private medicationDescription: string = "";
   private valid: Boolean = true;
   private activeForm: Boolean = false;
   private buttionAction: string = "add";
   private tempID: number = 0;
-  private overlay: Boolean = false;
-
+  private controlNameActive: Boolean = false;
   clearIDAndName() {
     this.name = "";
+    this.controlNameActive = false;
   }
 
   checkID() {
     if (this.identifier.length == 10) {
-      this.overlay = true;
+      this.setOverLay(true);
       var order = "/patient/" + this.identifier;
       this.axios
         .get(order)
@@ -195,10 +145,12 @@ export default class HealthRecordForm extends Vue {
         .then(({ patient }) => {
           this.name = patient["family"] + patient["given"];
           this.tempID = patient["id"];
-          this.overlay = false;
+          this.controlNameActive = true;
+          this.setOverLay(false);
         })
         .catch(data => {
-          this.overlay = false;
+          this.setOverLay(false);
+          this.controlNameActive = false;
           this.$toasted.show(`讀取不到身分證對應的名字`, {
             type: "error",
             position: "top-right",
@@ -215,44 +167,19 @@ export default class HealthRecordForm extends Vue {
       this.buttionAction = "close";
     }
   }
-  data() {
-    return {
-      picker: new Date().toISOString().substr(0, 10),
-      treatDate: new Date().toISOString().substr(0, 10),
-      createHealthRecordDate: "",
-      treatMenu: false,
-      birthMenu: false
-    };
-  }
   clear() {
     this.identifier = "";
     this.name = "";
-    this.createHealthRecordDate = "";
     this.conditionDescription = "";
     this.medicationDescription = "";
   }
   getShowData() {
-    this.overlay = true;
-    var order = "/healthrecord/" + this.$route.query.id;
-    this.axios
-      .get(order)
-      .then(data => data.data)
-      .then(({ healthRecord }) => {
-        this.identifier = healthRecord.identifier;
-        this.name = healthRecord.name;
-        this.conditionDescription = healthRecord.code;
-        this.medicationDescription = healthRecord.medication;
-        this.createHealthRecordDate = healthRecord.date;
-        this.overlay = false;
-      })
-      .catch(data => {
-        this.overlay = false;
-        this.$toasted.show(`資料讀取失敗，請重新整理一次`, {
-          type: "error",
-          position: "top-right",
-          duration: 3000
-        });
-      });
+    this.setOverLay(true);
+    this.identifier = String(this.healthrecord.identifier);
+    this.name = String(this.healthrecord.name);
+    this.conditionDescription = String(this.healthrecord.code);
+    this.medicationDescription = String(this.healthrecord.medication);
+    this.setOverLay(false);
   }
   close() {
     this.$router.push({
@@ -265,7 +192,7 @@ export default class HealthRecordForm extends Vue {
     }
   }
   pullHealthRecord() {
-    this.overlay = true;
+    this.setOverLay(true);
     var order = "/healthrecord";
     this.axios
       .post(
@@ -280,17 +207,18 @@ export default class HealthRecordForm extends Vue {
       )
       .then(data => data.data)
       .then(({ ok }) => {
+        this.setOverLay(false);
         this.$toasted.show(`新增成功`, {
           type: "success",
           position: "top-right",
           duration: 3000
         });
-        this.overlay = false;
         this.$router.push({
           path: "/admin/healthrecord/healthrecord"
         });
       })
       .catch(data => {
+        this.setOverLay(false);
         this.$toasted.show(`新增失敗，請重新確認輸入資料`, {
           type: "error",
           position: "top-right",

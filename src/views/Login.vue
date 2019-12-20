@@ -47,6 +47,9 @@
         </v-row>
       </v-container>
     </v-content>
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
   </v-app>
 </template>
 
@@ -62,7 +65,7 @@ export default class Login extends Vue {
 
   private email: string = "";
   private password: string = "";
-
+  private overlay: Boolean = false;
   beforeRouteEnter(to: any, from: any, next: (vm: any) => void) {
     next((vm: any) => {
       if (vm.user != undefined) {
@@ -71,6 +74,7 @@ export default class Login extends Vue {
     });
   }
   onLogin() {
+    //this.overlay = true;
     this.axios
       .post(
         "/login",
@@ -81,15 +85,18 @@ export default class Login extends Vue {
       )
       .then(data => data.data)
       .then(({ user }) => {
+        this.overlay = false;
         this.$toasted.show(`Login success!! Welcom ${user.name}`, {
           type: "success",
           position: "top-right",
           duration: 3000
         });
         this.userLoaded(user);
+        
         this.$router.push({ name: "admin" });
       })
       .catch(data => {
+        this.overlay = false;
         this.$toasted.show(`Login failed!!`, {
           type: "error",
           position: "top-right",

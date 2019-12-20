@@ -5,6 +5,7 @@ import { Dashboard } from "./modules/dashboard/index";
 import { User } from "./modules/user/index";
 import { Loader } from "./modules/loader/index";
 import { Patient } from "./modules/patient/index";
+import { HealthRecord } from "./modules/healthrecord/index";
 import VuexPersistence from "vuex-persist";
 
 Vue.use(Vuex);
@@ -16,7 +17,7 @@ const store: StoreOptions<RootState> = {
   state: {
     version: "1.0.0"
   },
-  modules: { Dashboard, User, Loader, Patient },
+  modules: { Dashboard, User, Loader, Patient ,HealthRecord},
   plugins: [vuexLocal.plugin]
 };
 
