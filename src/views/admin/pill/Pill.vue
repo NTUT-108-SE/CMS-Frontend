@@ -6,8 +6,9 @@
           :headers="headers"
           :items="desserts"
           :search="search"
-          sort-by="pillNum"
+          sort-by="id"
           class="elevation-1"
+          :loading="loading"
         >
           <template v-slot:top>
             <v-toolbar flat color="white">
@@ -40,37 +41,29 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-
+import { State, Mutation } from "vuex-class";
 @Component
 export default class Pill extends Vue {
-  search: string = "";
-  headers: Object = [
-    {
-      text: "藥品號碼",
-      align: "left",
-      value: "pillNum"
-    },
-    { text: "藥品學名", value: "pillScientificName" },
-    { text: "藥品商品名", value: "pillName" },
+  private search: string = "";
+  private loading: Boolean = true;
+  private headers: Object = [
+    { text: "藥品號碼", value: "id" },
+    { text: "藥品學名", value: "name" },
+    { text: "藥品名稱", value: "name" },
     { text: "操作", value: "action", sortable: false }
   ];
-  desserts: object = [];
+  private desserts: Array<Object> = [];
   created() {
-    this.initialize();
+
   }
-  initialize() {
-    this.desserts = [
-      {
-        pillNum: "0",
-        pillScientificName: "acetaminophen",
-        pillName: "普拿疼"
-      },
-      {
-        pillNum: "1",
-        pillScientificName: "aspirin",
-        pillName: "阿斯匹林"
-      }
-    ];
+  deleteItem(item: any) {
+    
+  }
+  showItem(item: any) {
+    
+  }
+  editItem(item: any) {
+    
   }
 }
 </script>
