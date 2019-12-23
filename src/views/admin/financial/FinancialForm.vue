@@ -4,24 +4,27 @@
       <v-col md="6">
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
-            <v-toolbar-title>新增收據</v-toolbar-title>
+            <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-container>
-              <v-form class="py-3">
-                <v-row justify="">
+              <v-form class="py-3" ref="form" v-model="valid" lazy-validation>
+                <v-row justify="center">
                   <v-col md="6">
                     <v-text-field
                       label="身分證"
                       prepend-icon="mdi-account-badge-horizontal-outline"
-                      v-model="patientID"
+                      v-model="identifier"
                       :rules="[
-                        () => !!patientID || '必須填入',
-                        () => patientID.length == 10 || '身分證必須是10個字元'
+                        () => !!identifier || '必須填入',
+                        () => identifier.length == 10 || '身分證必須是10個字元'
                       ]"
                       clearable
                       dense
                       outlined
+                      v-on:input="checkID"
+                      :disabled="activeForm"
+                      @click:clear="clearIDAndName"
                     ></v-text-field>
                   </v-col>
                   <v-col md="6">
@@ -29,24 +32,27 @@
                       ref="birthMenu"
                       v-model="birthMenu"
                       :close-on-content-click="false"
-                      :return-value.sync="CreateDate"
+                      :return-value.sync="createDateText"
                       transition="scale-transition"
                       offset-y
                       min-width="290px"
                     >
                       <template v-slot:activator="{ on }">
                         <v-text-field
-                          v-model="CreateDate"
+                          v-model="createDateText"
                           label="建立時間"
                           prepend-icon="mdi-calendar-blank"
+                          :rules="[() => !!createDateText || '必須填入']"
                           readonly
                           v-on="on"
+                          clearable
                           dense
                           outlined
+                          :disabled="activeForm"
                         ></v-text-field>
                       </template>
                       <v-date-picker
-                        v-model="CreateDate"
+                        v-model="createDateText"
                         no-title
                         scrollable
                         min="1919-01-01"
@@ -58,57 +64,51 @@
                         <v-btn
                           text
                           color="primary"
-                          @click="$refs.birthMenu.save(CreateDate)"
+                          @click="$refs.birthMenu.save(createDateText)"
                           >OK</v-btn
                         >
                       </v-date-picker>
                     </v-menu>
                   </v-col>
                 </v-row>
-                <v-row justify="">
+                <v-row justify="center">
                   <v-col md="6">
                     <v-text-field
-                      label="姓氏"
+                      label="姓名"
                       prepend-icon="mdi-account"
-                      v-model="firstName"
-                      :rules="[() => !!firstName || '必須填入']"
+                      v-model="name"
+                      :rules="[() => !!name || '必須填入']"
                       clearable
                       dense
                       outlined
+                      :disabled="activeForm || controlNameActive"
                     ></v-text-field>
                   </v-col>
                   <v-col md="6">
-                    <v-text-field
-                      label="名字"
-                      prepend-icon="mdi-account"
-                      v-model="lastName"
-                      :rules="[() => !!lastName || '必須填入']"
-                      clearable
-                      dense
-                      outlined
-                    ></v-text-field>
+                    <v-select v-show="false"></v-select>
                   </v-col>
                 </v-row>
-                <v-row justify="">
+                <v-row justify="center">
                   <v-col md="12">
                     <v-textarea
                       label="收據項目"
                       prepend-icon="mdi-file-document-edit-outline"
-                      v-model="financialItem"
-                      :rules="[() => !!financialItem || '必須填入']"
+                      v-model="text"
+                      :rules="[() => !!text || '必須填入']"
                       clearable
                       dense
                       outlined
+                      :disabled="activeForm"
                     ></v-textarea>
                   </v-col>
                 </v-row>
-                <v-row justify="center pb-3">
+                <v-row justify="center">
                   <v-btn
                     class="mx-12"
                     dark
                     color="primary"
                     @click="submit"
-                    v-if="action == 'add'"
+                    v-if="buttionAction == 'add'"
                   >
                     <v-icon left>mdi-send-check</v-icon>
                     送出
@@ -118,7 +118,7 @@
                     @click="close"
                     dark
                     color="red"
-                    v-else-if="action === 'close'"
+                    v-if="buttionAction == 'close'"
                   >
                     <v-icon left>mdi-close </v-icon>
                     關閉
@@ -126,7 +126,7 @@
                   <v-btn
                     class="mx-12"
                     @click="clear"
-                    v-if="action != 'close'"
+                    v-if="buttionAction == 'add'"
                     dark
                     color="secondary"
                   >
@@ -145,30 +145,123 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-
+import { State, Mutation } from "vuex-class";
+import { Financial } from "@/store/modules/financial/types";
 @Component
 export default class FinancialForm extends Vue {
-  patientID: string = "";
-  firstName: string = "";
-  lastName: string = "";
-  CreateDate: string = "";
-  financialItem: string = "";
-  action: string = "add";
+  @Mutation("Loader/setOverLay") setOverLay!: Function;
+  @State("financial", { namespace: "Financial" })
+  financial!: Financial;
+  private formTitle: string = "新增收據";
+  private activeForm: Boolean = false;
+  private valid: Boolean = true;
+  private buttionAction: string = "add";
+  private createDateText: string = "";
+  private name: string = "";
+  private identifier: string = "";
+  private text: string = "";
+  private tempID: number = 0;
+  private controlNameActive: Boolean = false;
   data() {
     return {
       picker: new Date().toISOString().substr(0, 10),
       treatDate: new Date().toISOString().substr(0, 10),
-      CreateDate: "",
+      createDateText: "",
       treatMenu: false,
       birthMenu: false
     };
   }
+  clearIDAndName() {
+    this.name = "";
+    this.controlNameActive = false;
+  }
+  checkID() {
+    if (this.identifier.length == 10) {
+      this.setOverLay(true);
+      var order = "/patient/" + this.identifier;
+      this.axios
+        .get(order)
+        .then(data => data.data)
+        .then(({ patient }) => {
+          this.name = patient["family"] + patient["given"];
+          this.tempID = patient["id"];
+          this.controlNameActive = true;
+          this.setOverLay(false);
+        })
+        .catch(data => {
+          this.setOverLay(false);
+          this.controlNameActive = false;
+          this.$toasted.show(`讀取不到身分證對應的名字`, {
+            type: "error",
+            position: "top-right",
+            duration: 3000
+          });
+        });
+    }
+  }
   clear() {
-    this.patientID = "";
-    this.firstName = "";
-    this.lastName = "";
-    this.CreateDate = "";
-    this.financialItem = "";
+    this.createDateText = "";
+    this.name = "";
+    this.identifier = "";
+    this.text = "";
+  }
+  created() {
+    if (this.$route.query.action == "show") {
+      this.formTitle = "顯示收據資料";
+      this.getShowData();
+      this.activeForm = true;
+      this.buttionAction = "close";
+    }
+  }
+  getShowData() {
+    this.setOverLay(true);
+    this.createDateText = String(this.financial.date);
+    this.name = String(this.financial.name);
+    this.identifier = String(this.financial.identifier);
+    this.text = String(this.financial.text);
+    this.setOverLay(false);
+  }
+  close() {
+    this.$router.push({
+      path: "/admin/financial/financial"
+    });
+  }
+  submit(): void {
+    if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
+      this.setOverLay(true);
+      var order = "/invoice";
+      this.axios
+        .post(
+          order,
+          JSON.stringify({
+            address: this.createDateText,
+            patientId: this.tempID,
+            name: this.name,
+            identifier: this.identifier,
+            text: this.text
+          })
+        )
+        .then(data => data.data)
+        .then(({ ok }) => {
+          this.setOverLay(false);
+          this.$toasted.show(`新增成功`, {
+            type: "success",
+            position: "top-right",
+            duration: 3000
+          });
+          this.$router.push({
+            path: "/admin/financial/financial"
+          });
+        })
+        .catch(data => {
+          this.setOverLay(false);
+          this.$toasted.show(`新增失敗，請重新確認輸入資料`, {
+            type: "error",
+            position: "top-right",
+            duration: 3000
+          });
+        });
+    }
   }
 }
 </script>
