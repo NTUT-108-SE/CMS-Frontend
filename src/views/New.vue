@@ -30,7 +30,7 @@ export default class Registration extends Vue {
   articleContext: String = "";
 
   created() {
-    console.log(1);
+    
     this.clearArticle();
     this.articleID = String(this.$route.query.id);
     this.getAnnouncement();
