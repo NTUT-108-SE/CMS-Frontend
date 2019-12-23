@@ -15,7 +15,7 @@ import { Vue, Component } from "vue-property-decorator";
 import LastestNewsSheet from "@/components/LastestNewsSheet.vue";
 
 @Component({ components: { LastestNewsSheet } })
-export default class Registration extends Vue {
+export default class LastestNews extends Vue {
   isShowNewsContext: Boolean = false;
 }
 </script>

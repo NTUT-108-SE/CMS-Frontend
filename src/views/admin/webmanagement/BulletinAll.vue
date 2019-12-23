@@ -75,7 +75,6 @@ export default class BulletinAll extends Vue {
     var selcetedBullentinID = item.id;
     const selectedBullentinIndex = this.desserts.indexOf(item);
     var deletApi = "/management/announcement/" + selcetedBullentinID;
-    console.log(deletApi);
     if (confirm("確定要刪除這個公告嗎?")) {
       this.setOverLay(true);
       this.axios
@@ -111,6 +110,7 @@ export default class BulletinAll extends Vue {
   }
 
   editItem(item: any) {
+    this.storeBulletinInfo(item);
     this.$router.push({
       path: "/admin/webmanagement/bulletinform",
       query: { action: "edit" }

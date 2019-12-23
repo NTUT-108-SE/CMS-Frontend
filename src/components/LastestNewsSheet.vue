@@ -27,19 +27,6 @@ import { State, Mutation } from "vuex-class";
 export default class LastestNewsSheet extends Vue {
   @Mutation("User/UserLogout") userLogout!: Function;
   search: string = "";
-  headers: Object = [
-    {
-      text: "更新日期",
-      align: "left",
-      sortable: false,
-      value: "name"
-    },
-    { text: "標題", value: "calories" },
-    { text: "Fat (g)", value: "fat" },
-    { text: "Carbs (g)", value: "carbs" },
-    { text: "Protein (g)", value: "protein" },
-    { text: "Iron (%)", value: "iron" }
-  ];
   desserts: object = [];
 
   created() {
@@ -54,13 +41,11 @@ export default class LastestNewsSheet extends Vue {
         this.desserts = announcements.entry;
       })
       .catch(data => {
-        this.$toasted.show(`資料讀取失敗，請重新登入`, {
+        this.$toasted.show(`資料讀取失敗，請重新整理`, {
           type: "error",
           position: "top-right",
           duration: 3000
         });
-        this.userLogout();
-        this.$router.push("/login");
       });
   }
 
@@ -69,6 +54,7 @@ export default class LastestNewsSheet extends Vue {
   }
 
   gotoSelectedNews(item: any) {
+    console.log(item);
     this.$router.push({
       path: "/News",
       query: { id: item.id }

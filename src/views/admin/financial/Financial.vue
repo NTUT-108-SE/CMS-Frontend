@@ -58,7 +58,6 @@ export default class Financial extends Vue {
       .get("/invoice/all")
       .then(data => data.data)
       .then(({ invoices }) => {
-        
         this.desserts = invoices["entry"];
         this.loading = false;
       })
