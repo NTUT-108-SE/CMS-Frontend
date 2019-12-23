@@ -3,7 +3,7 @@
     <v-row justify="center">
       <v-col md="8">
         <v-card class="elevation-12">
-          <LastestNewsSheet />
+          <LastestNewsSheet v-if="!isShowNewsContext" />
         </v-card>
       </v-col>
     </v-row>
@@ -15,5 +15,7 @@ import { Vue, Component } from "vue-property-decorator";
 import LastestNewsSheet from "@/components/LastestNewsSheet.vue";
 
 @Component({ components: { LastestNewsSheet } })
-export default class Registration extends Vue {}
+export default class Registration extends Vue {
+  isShowNewsContext: Boolean = false;
+}
 </script>

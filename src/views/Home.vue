@@ -33,38 +33,27 @@ import { Vue, Component } from "vue-property-decorator";
 import Centered from "@/components/Centered.vue";
 import RegistrationInfo from "@/components/RegistrationInfo.vue";
 import LastestNewsSheet from "@/components/LastestNewsSheet.vue";
+import { State, Mutation } from "vuex-class";
+import { WebSetting } from "@/store/modules/webSetting/types";
 
 @Component({ components: { RegistrationInfo, LastestNewsSheet } })
 export default class Home extends Vue {
-  data() {
-    return {
-      colors: [
-        "indigo",
-        "warning",
-        "pink darken-2",
-        "red lighten-1",
-        "deep-purple accent-4"
-      ],
-      items: [
-        {
-          src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
-          href: "https://google.com"
-        },
-        {
-          src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
-          href: "https://google.com"
-        },
-        {
-          src: "https://cdn.vuetifyjs.com/images/carousel/bird.jpg",
-          href: "https://google.com"
-        },
-        {
-          src: "https://cdn.vuetifyjs.com/images/carousel/planet.jpg",
-          href: "https://google.com"
-        }
-      ],
-      slides: ["First", "Second", "Third", "Fourth", "Fifth"]
-    };
+  @State("webSetting", { namespace: "WebSetting" }) webSetting!: WebSetting;
+  items: Array<Object> = [];
+
+  created() {
+    this.items = this.settingImage();
+  }
+
+  settingImage() {
+    var carouselImages = [{}];
+    for (var i = 0; i < this.webSetting.images.length; i++) {
+      carouselImages[i] = {
+        src: this.webSetting.images[i],
+        href: this.webSetting.URLs[i]
+      };
+    }
+    return carouselImages;
   }
 }
 </script>

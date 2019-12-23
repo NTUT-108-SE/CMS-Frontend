@@ -8,14 +8,14 @@
           </v-toolbar>
           <v-card-text>
             <v-container>
-              <v-form class="py-3">
-                <v-row justify="">
+              <v-form class="py-3" ref="form">
+                <v-row justify="center">
                   <v-col md="6">
                     <v-text-field
                       label="圖片網址1"
                       prepend-icon="mdi-image"
-                      v-model="imageUrlOne"
-                      :rules="[() => !!imageUrlOne || '必須填入']"
+                      v-model="images[0]"
+                      :rules="[() => !!images[0] || '必須填入']"
                       clearable
                       dense
                       outlined
@@ -25,21 +25,21 @@
                     <v-text-field
                       label="圖片網址2"
                       prepend-icon="mdi-image"
-                      v-model="imageUrlTwo"
-                      :rules="[() => !!imageUrlTwo || '必須填入']"
+                      v-model="images[1]"
+                      :rules="[() => !!images[1] || '必須填入']"
                       clearable
                       dense
                       outlined
                     ></v-text-field>
                   </v-col>
                 </v-row>
-                <v-row justify="">
+                <v-row justify="center">
                   <v-col md="6">
                     <v-text-field
                       label="圖片網址3"
                       prepend-icon="mdi-image"
-                      v-model="imageUrlThree"
-                      :rules="[() => !!imageUrlThree || '必須填入']"
+                      v-model="images[2]"
+                      :rules="[() => !!images[2] || '必須填入']"
                       clearable
                       dense
                       outlined
@@ -49,21 +49,21 @@
                     <v-text-field
                       label="圖片網址4"
                       prepend-icon="mdi-image"
-                      v-model="imageUrlFour"
-                      :rules="[() => !!imageUrlFour || '必須填入']"
+                      v-model="images[3]"
+                      :rules="[() => !!images[3] || '必須填入']"
                       clearable
                       dense
                       outlined
                     ></v-text-field>
                   </v-col>
                 </v-row>
-                <v-row justify="">
+                <v-row justify="center">
                   <v-col md="6">
                     <v-text-field
                       label="目標網址1"
                       prepend-icon="mdi-image"
-                      v-model="targetUrlOne"
-                      :rules="[() => !!targetUrlOne || '必須填入']"
+                      v-model="urls[0]"
+                      :rules="[() => !!urls[0] || '必須填入']"
                       clearable
                       dense
                       outlined
@@ -73,21 +73,21 @@
                     <v-text-field
                       label="目標網址2"
                       prepend-icon="mdi-image"
-                      v-model="targetUrlTwo"
-                      :rules="[() => !!targetUrlTwo || '必須填入']"
+                      v-model="urls[1]"
+                      :rules="[() => !!urls[1] || '必須填入']"
                       clearable
                       dense
                       outlined
                     ></v-text-field>
                   </v-col>
                 </v-row>
-                <v-row justify="">
+                <v-row justify="center">
                   <v-col md="6">
                     <v-text-field
                       label="目標網址3"
                       prepend-icon="mdi-image"
-                      v-model="targetUrlThree"
-                      :rules="[() => !!targetUrlThree || '必須填入']"
+                      v-model="urls[2]"
+                      :rules="[() => !!urls[2] || '必須填入']"
                       clearable
                       dense
                       outlined
@@ -97,15 +97,15 @@
                     <v-text-field
                       label="目標網址4"
                       prepend-icon="mdi-image"
-                      v-model="targetUrlFour"
-                      :rules="[() => !!targetUrlFour || '必須填入']"
+                      v-model="urls[3]"
+                      :rules="[() => !!urls[3] || '必須填入']"
                       clearable
                       dense
                       outlined
                     ></v-text-field>
                   </v-col>
                 </v-row>
-                <v-row justify="">
+                <v-row justify="center">
                   <v-col md="12">
                     <v-textarea
                       label="院所介紹"
@@ -118,7 +118,7 @@
                     ></v-textarea>
                   </v-col>
                 </v-row>
-                <v-row justify="">
+                <v-row justify="center">
                   <v-col md="12">
                     <v-textarea
                       label="主治項目"
@@ -131,7 +131,7 @@
                     ></v-textarea>
                   </v-col>
                 </v-row>
-                <v-row justify="">
+                <v-row justify="center">
                   <v-col md="12">
                     <v-textarea
                       label="醫師介紹"
@@ -144,7 +144,7 @@
                     ></v-textarea>
                   </v-col>
                 </v-row>
-                <v-row justify="">
+                <v-row justify="center">
                   <v-col md="12">
                     <v-textarea
                       label="院所位置"
@@ -157,7 +157,7 @@
                     ></v-textarea>
                   </v-col>
                 </v-row>
-                <v-row justify="center pb-3">
+                <v-row justify="center">
                   <v-btn class="mx-4" dark color="primary" @click="submit">
                     <v-icon left>mdi-send-check</v-icon>
                     設定
@@ -182,20 +182,104 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
+import { State, Mutation } from "vuex-class";
 
 @Component
 export default class WebDesign extends Vue {
-  imageUrlOne: string = "";
-  imageUrlTwo: string = "";
-  imageUrlThree: string = "";
-  imageUrlFour: string = "";
-  targetUrlOne: string = "";
-  targetUrlTwo: string = "";
-  targetUrlThree: string = "";
-  targetUrlFour: string = "";
+  @Mutation("Loader/setOverLay") setOverLay!: Function;
+  images: Array<String> = ["", "", "", ""];
+  urls: Array<string> = ["", "", "", ""];
   clinicIntroduction: string = "";
   indications: string = "";
   doctorIntroduction: string = "";
   clinicLocation: string = "";
+  title: string = "";
+  created() {
+    this.getWebDesignSetting();
+    this.setOverLay(false);
+  }
+
+  getWebDesignSetting() {
+    this.setOverLay(true);
+    this.axios
+      .get("/management")
+      .then(data => data.data)
+      .then(({ management }) => {
+        this.title = management.title;
+        this.images = management.images;
+        this.urls = management.URLs;
+        this.clinicIntroduction = management.ourServices;
+        this.indications = management.description;
+        this.doctorIntroduction = management.doctorDescription;
+        this.clinicLocation = management.clinicAddress;
+      })
+      .catch(data => {
+        this.$toasted.show(`資料讀取失敗，請重新登入`, {
+          type: "error",
+          position: "top-right",
+          duration: 3000
+        });
+      })
+      .then(() => {
+        this.setOverLay(false);
+      });
+  }
+
+  submit() {
+    if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
+      this.setOverLay(true);
+      this.axios
+        .put("/management/information", this.getSeetingJson())
+        .then(data => data.data)
+        .then(({ ok }) => {
+          this.$toasted.show(`更新成功`, {
+            type: "success",
+            position: "top-right",
+            duration: 3000
+          });
+          this.$router.push({
+            path: "/admin/webmanagement/bulletinall"
+          });
+        })
+        .catch(data => {
+          this.$toasted.show(`更新失敗`, {
+            type: "error",
+            position: "top-right",
+            duration: 3000
+          });
+        })
+        .then(() => {
+          this.setOverLay(false);
+        });
+    }
+  }
+
+  clear() {
+    this.images = ["", "", "", ""];
+    this.urls = ["", "", "", ""];
+    this.clinicIntroduction = "";
+    this.indications = "";
+    this.doctorIntroduction = "";
+    this.clinicLocation = "";
+  }
+
+  close() {
+    this.$router.push({
+      path: "/admin/webmanagement/bulletinall"
+    });
+  }
+
+  getSeetingJson(): string {
+    return JSON.stringify({
+      title: this.title,
+      time: new Date().toISOString().substr(0, 10),
+      images: this.images,
+      URLs: this.urls,
+      ourServices: this.clinicIntroduction,
+      description: this.indications,
+      doctorDescription: this.doctorIntroduction,
+      clinicAddress: this.clinicLocation
+    });
+  }
 }
 </script>

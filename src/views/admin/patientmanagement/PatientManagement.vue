@@ -69,6 +69,7 @@ export default class PatientManagement extends Vue {
   desserts: Array<Object> = [];
   created() {
     this.getPatientAll();
+    this.setOverLay(false);
   }
 
   getPatientAll() {
