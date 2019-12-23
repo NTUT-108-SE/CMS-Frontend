@@ -264,6 +264,7 @@ export default class PatientManagementForm extends Vue {
       this.buttonAction = "edit";
       this.getShowData();
     }
+    this.setOverLay(false);
   }
 
   getShowData() {

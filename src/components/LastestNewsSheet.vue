@@ -5,16 +5,14 @@
         <tr>
           <th class="text-left">發布日期</th>
           <th class="text-left">標題</th>
-          <th class="text-right">觀看次數</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in desserts" :key="item.name">
-          <td>{{ item.updateTime }}</td>
+          <td>{{ formattingDate(item.date) }}</td>
           <td>
-            <a :href="item.url">{{ item.title }}</a>
+            <a @click="gotoSelectedNews(item)">{{ item.title }}</a>
           </td>
-          <td class="text-right">{{ item.viewsNumber }}</td>
         </tr>
       </tbody>
     </template>
@@ -23,9 +21,11 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
+import { State, Mutation } from "vuex-class";
 
 @Component
 export default class LastestNewsSheet extends Vue {
+  @Mutation("User/UserLogout") userLogout!: Function;
   search: string = "";
   headers: Object = [
     {
@@ -40,14 +40,39 @@ export default class LastestNewsSheet extends Vue {
     { text: "Protein (g)", value: "protein" },
     { text: "Iron (%)", value: "iron" }
   ];
-  desserts: object = [
-    {
-      updateTime: "2019-10-29",
-      url: "https://rnd.ntut.edu.tw/p/404-1042-96433-1.php",
-      title:
-        "【公告】臺北醫學大學舉辦108學年度「提升研究創新能量」，歡迎踴躍參加！",
-      viewsNumber: 0
-    }
-  ];
+  desserts: object = [];
+
+  created() {
+    this.getAllAnnouncements();
+  }
+
+  getAllAnnouncements() {
+    this.axios
+      .get("/management/announcements")
+      .then(data => data.data)
+      .then(({ announcements }) => {
+        this.desserts = announcements.entry;
+      })
+      .catch(data => {
+        this.$toasted.show(`資料讀取失敗，請重新登入`, {
+          type: "error",
+          position: "top-right",
+          duration: 3000
+        });
+        this.userLogout();
+        this.$router.push("/login");
+      });
+  }
+
+  formattingDate(date: string): String {
+    return new String(date).substr(0, 10);
+  }
+
+  gotoSelectedNews(item: any) {
+    this.$router.push({
+      path: "/News",
+      query: { id: item.id }
+    });
+  }
 }
 </script>
