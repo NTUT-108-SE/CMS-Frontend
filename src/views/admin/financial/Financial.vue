@@ -6,8 +6,9 @@
           :headers="headers"
           :items="desserts"
           :search="search"
-          sort-by="financialNum"
+          sort-by="id"
           class="elevation-1"
+          :loading="loading"
         >
           <template v-slot:top>
             <v-toolbar flat color="white">
@@ -34,41 +35,47 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-
+import { State, Mutation } from "vuex-class";
 @Component
 export default class Financial extends Vue {
-  search: string = "";
-  headers: Object = [
-    {
-      text: "收據號碼",
-      align: "left",
-      value: "financialNum"
-    },
-
+  @State("financial", { namespace: "Financial" }) financial!: Object;
+  @Mutation("Financial/storeFinancial") storeFinancial!: Function;
+  private search: string = "";
+  private loading: Boolean = true;
+  private headers: Object = [
+    { text: "收據號碼", value: "id" },
+    { text: "身分證", value: "identifier" },
     { text: "姓名", value: "name" },
-    { text: "身分證", value: "patientID" },
-    { text: "建立時間", value: "createTime" },
+    { text: "建立日期", value: "date" },
     { text: "操作", value: "action", sortable: false }
   ];
-  desserts: object = [];
+  private desserts: Array<Object> = [];
   created() {
-    this.initialize();
+    this.getFinancialAll();
   }
-  initialize() {
-    this.desserts = [
-      {
-        financialNum: "0",
-        name: "前端測試帳號",
-        patientID: "A000000000",
-        createTime: "2019-10-20"
-      },
-      {
-        financialNum: "1",
-        name: "前端測試帳號",
-        patientID: "B000000000",
-        createTime: "2019-10-20"
-      }
-    ];
+  getFinancialAll() {
+    this.axios
+      .get("/invoice/all")
+      .then(data => data.data)
+      .then(({ invoices }) => {
+        
+        this.desserts = invoices["entry"];
+        this.loading = false;
+      })
+      .catch(data => {
+        this.$toasted.show(`資料讀取失敗，請重新整理`, {
+          type: "error",
+          position: "top-right",
+          duration: 3000
+        });
+      });
+  }
+  showItem(item: any) {
+    this.storeFinancial(item);
+    this.$router.push({
+      path: "/admin/financial/financialform",
+      query: { action: "show" }
+    });
   }
 }
 </script>

@@ -6,8 +6,9 @@
           :headers="headers"
           :items="desserts"
           :search="search"
-          sort-by="pillNum"
+          sort-by="id"
           class="elevation-1"
+          :loading="loading"
         >
           <template v-slot:top>
             <v-toolbar flat color="white">
@@ -40,37 +41,80 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-
+import { State, Mutation } from "vuex-class";
 @Component
 export default class Pill extends Vue {
-  search: string = "";
-  headers: Object = [
-    {
-      text: "藥品號碼",
-      align: "left",
-      value: "pillNum"
-    },
-    { text: "藥品學名", value: "pillScientificName" },
-    { text: "藥品商品名", value: "pillName" },
+  @Mutation("Loader/setOverLay") setOverLay!: Function;
+  @State("pill", { namespace: "Pill" }) pill!: Object;
+  @Mutation("Pill/storePill") storePill!: Function;
+  private search: string = "";
+  private loading: Boolean = true;
+  private headers: Object = [
+    { text: "藥品號碼", value: "id" },
+    { text: "藥品學名", value: "name" },
+    { text: "藥品名稱", value: "synonym" },
     { text: "操作", value: "action", sortable: false }
   ];
-  desserts: object = [];
+  private desserts: Array<Object> = [];
   created() {
-    this.initialize();
+    this.getPillAll();
   }
-  initialize() {
-    this.desserts = [
-      {
-        pillNum: "0",
-        pillScientificName: "acetaminophen",
-        pillName: "普拿疼"
-      },
-      {
-        pillNum: "1",
-        pillScientificName: "aspirin",
-        pillName: "阿斯匹林"
-      }
-    ];
+  getPillAll() {
+    this.axios
+      .get("/medication/all")
+      .then(data => data.data)
+      .then(({ medications }) => {
+        this.desserts = medications["entry"];
+        this.loading = false;
+      })
+      .catch(data => {
+        this.$toasted.show(`資料讀取失敗，請重新整理`, {
+          type: "error",
+          position: "top-right",
+          duration: 3000
+        });
+      });
+  }
+  deleteItem(item: any) {
+    if (confirm("確定要刪除這個藥品資料嗎?")) {
+      this.setOverLay(true);
+      const index = this.desserts.indexOf(item);
+      var order = "/medication/" + item["id"];
+      this.axios
+        .delete(order)
+        .then(data => data.data)
+        .then(({ ok }) => {
+          this.desserts.splice(index, 1);
+          this.setOverLay(false);
+          this.$toasted.show(`刪除成功`, {
+            type: "success",
+            position: "top-right",
+            duration: 3000
+          });
+        })
+        .catch(data => {
+          this.setOverLay(false);
+          this.$toasted.show(`刪除失敗，請重新刪除一次`, {
+            type: "error",
+            position: "top-right",
+            duration: 3000
+          });
+        });
+    }
+  }
+  showItem(item: any) {
+    this.storePill(item);
+    this.$router.push({
+      path: "/admin/pill/pillform",
+      query: { action: "show" }
+    });
+  }
+  editItem(item: any) {
+    this.storePill(item);
+    this.$router.push({
+      path: "/admin/pill/pillform",
+      query: { action: "edit" }
+    });
   }
 }
 </script>

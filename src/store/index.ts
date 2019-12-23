@@ -6,6 +6,8 @@ import { User } from "./modules/user/index";
 import { Loader } from "./modules/loader/index";
 import { Patient } from "./modules/patient/index";
 import { HealthRecord } from "./modules/healthrecord/index";
+import { Pill } from "./modules/pill/index";
+import { Financial } from "./modules/financial/index";
 import { BulletinInfo } from "./modules/bulletinInfo/index";
 import { WebSetting } from "./modules/webSetting/index";
 import VuexPersistence from "vuex-persist";
@@ -26,7 +28,9 @@ const store: StoreOptions<RootState> = {
     Patient,
     HealthRecord,
     BulletinInfo,
-    WebSetting
+    WebSetting,
+    Pill,
+    Financial
   },
   plugins: [vuexLocal.plugin]
 };

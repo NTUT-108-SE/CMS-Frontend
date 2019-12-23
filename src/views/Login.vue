@@ -74,7 +74,7 @@ export default class Login extends Vue {
     });
   }
   onLogin() {
-    //this.overlay = true;
+    this.overlay = true;
     this.axios
       .post(
         "/login",
