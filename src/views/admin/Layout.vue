@@ -2,11 +2,9 @@
   <v-app id="inspire">
     <Toolbar />
     <transition>
-      <keep-alive>
-        <v-content>
-          <router-view></router-view>
-        </v-content>
-      </keep-alive>
+      <v-content>
+        <router-view></router-view>
+      </v-content>
     </transition>
     <Loader />
     <Footer :dark="true" />

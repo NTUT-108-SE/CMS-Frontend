@@ -53,10 +53,11 @@
         ></v-img>
       </template>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title class="mr-12 align-center"
-        ><span class="title">Clinic Management System DashBoard</span>
-      </v-toolbar-title>
-
+      <router-link to="/" tag="span">
+        <v-toolbar-title class="mr-12 align-center"
+          ><span class="title">Clinic Management System DashBoard</span>
+        </v-toolbar-title>
+      </router-link>
       <v-spacer></v-spacer>
 
       <v-btn icon @click="Logout">

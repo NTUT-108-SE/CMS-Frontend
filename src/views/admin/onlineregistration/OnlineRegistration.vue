@@ -9,11 +9,6 @@
           <v-divider class="mx-4"></v-divider>
           <v-row>
             <v-card-text class="py-2 px-6">
-              看診醫生： {{ doctorName }}
-            </v-card-text>
-          </v-row>
-          <v-row>
-            <v-card-text class="py-2 px-6">
               今日掛號人數： {{ totleRegistration }}
             </v-card-text>
           </v-row>
@@ -31,7 +26,7 @@
               </v-btn>
             </v-card-actions>
             <v-card-actions align="center">
-              <v-btn dark color="red" @click="nextNum">
+              <v-btn dark color="red" @click="skipNum">
                 <v-icon left>mdi-chevron-right</v-icon>
                 跳號
               </v-btn>
@@ -70,22 +65,10 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component
 export default class OnlineRegistration extends Vue {
-  doctorName: string = "黃俊凱";
-  totleRegistration: string = "50";
-  nowRegistration: string = "0";
-  nextNum() {
-    var next = parseInt(this.nowRegistration) + 1;
-    this.nowRegistration = next.toString();
-  }
-
-  search: string = "";
-  headers: Object = [
-    {
-      text: "掛號號碼",
-      align: "left",
-      value: "onlineRegistrationNum"
-    },
-    { text: "身分證號碼", value: "patientID" },
+  private search: string = "";
+  private headers: Object = [
+    { text: "掛號順序", value: "order" },
+    { text: "身分證號碼", value: "identifier" },
     { text: "姓名", value: "name" },
     { text: "出生年月日", value: "birthDate" },
     { text: "掛號日期", value: "registrationDate" }
