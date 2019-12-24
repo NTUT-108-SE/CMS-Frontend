@@ -230,6 +230,7 @@ export default class Registration extends Vue {
 
   submit() {
     if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
+      this.userRegistrationInfos = [];
       if (this.isCheckRegistrationIndexStatus)
         this.searchUserRegistrationInfo();
       else this.register();
@@ -266,9 +267,10 @@ export default class Registration extends Vue {
       .post(api, this.allTheFormInfomation())
       .then(data => data.data)
       .then(({ registration }) => {
-        this.showUserRegistrationIndex(registration);
+        this.showUserRegistrationIndex([registration]);
       })
       .catch(data => {
+        this.showUserRegistrationIndex([]);
         this.$toasted.show(`掛號失敗`, {
           type: "error",
           position: "top-right",
