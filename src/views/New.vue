@@ -19,10 +19,9 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import LastestNewsSheet from "@/components/LastestNewsSheet.vue";
 
-@Component({ components: { LastestNewsSheet } })
-export default class Registration extends Vue {
+@Component
+export default class New extends Vue {
   private articleID: String = "";
   articleTitle: String = "";
   articlePostDate: String = "";
@@ -30,7 +29,6 @@ export default class Registration extends Vue {
   articleContext: String = "";
 
   created() {
-    
     this.clearArticle();
     this.articleID = String(this.$route.query.id);
     this.getAnnouncement();
@@ -65,6 +63,5 @@ export default class Registration extends Vue {
     this.author = announcement.author;
     this.articleContext = announcement.context;
   }
-  
 }
 </script>
