@@ -3,9 +3,7 @@
     <Header />
     <v-content>
       <transition>
-        <keep-alive>
-          <router-view></router-view>
-        </keep-alive>
+        <router-view></router-view>
       </transition>
     </v-content>
     <Footer />
@@ -21,6 +19,7 @@ import { State, Mutation } from "vuex-class";
 @Component({ components: { Header, Footer } })
 export default class Layout extends Vue {
   @Mutation("WebSetting/storeWebSetting") storeWebSetting!: Function;
+  previousElement: Object = "";
 
   created() {
     this.getWebDesignSetting();
