@@ -230,7 +230,8 @@ export default class Registration extends Vue {
 
   submit() {
     if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
-      if (this.isCheckRegistrationIndexStatus) this.searchUserRegistrationInfo();
+      if (this.isCheckRegistrationIndexStatus)
+        this.searchUserRegistrationInfo();
       else this.register();
     }
   }
