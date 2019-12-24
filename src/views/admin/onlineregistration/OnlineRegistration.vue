@@ -32,6 +32,15 @@
               </v-btn>
             </v-card-actions>
           </v-row>
+          <v-row justify="center">
+            <v-card-actions align="center">
+              <v-switch
+                v-model="singleSelect"
+                label="只顯示今日掛號"
+                v-on:change="process()"
+              ></v-switch>
+            </v-card-actions>
+          </v-row>
         </v-card>
       </v-col>
       <v-col md="10">
@@ -39,12 +48,15 @@
           :headers="headers"
           :items="desserts"
           :search="search"
-          sort-by="onlineRegistrationNum"
+          sort-by="registrationDate"
           class="elevation-1"
+          :loading="loading"
         >
           <template v-slot:top>
             <v-toolbar flat color="white">
               <v-toolbar-title>掛號病人列表</v-toolbar-title>
+              <v-spacer></v-spacer>
+
               <v-spacer></v-spacer>
               <v-text-field
                 v-model="search"
@@ -73,34 +85,83 @@ export default class OnlineRegistration extends Vue {
     { text: "出生年月日", value: "birthDate" },
     { text: "掛號日期", value: "registrationDate" }
   ];
-  desserts: object = [];
+  private loading: Boolean = true;
+  private totleRegistration: string = "";
+  private nowRegistration: string = "";
+  private singleSelect: Boolean = false;
+  private desserts: Array<Object> = [];
+  process() {
+    if (this.singleSelect) {
+      var tzoffset = new Date().getTimezoneOffset() * 60000;
+      this.desserts = [];
+      this.loading = true;
+      var currentDate = new Date(Date.now() - tzoffset)
+        .toISOString()
+        .substr(0, 10);
+      var api = "/registration?date=" + currentDate;
+      this.axios
+        .get(api)
+        .then(data => data.data)
+        .then(({ registrations }) => {
+          this.desserts = registrations;
+          this.loading = false;
+        })
+        .catch(data => {
+          this.$toasted.show(`資料讀取失敗，請重新整理`, {
+            type: "error",
+            position: "top-right",
+            duration: 3000
+          });
+        });
+    } else {
+      this.desserts = [];
+      this.loading = true;
+      this.getRegistrationAll();
+    }
+  }
   created() {
-    this.initialize();
+    this.getCurrentRegistrationInfo();
+    this.getRegistrationAll();
   }
-  initialize() {
-    this.desserts = [
-      {
-        onlineRegistrationNum: "0",
-        patientID: "A000000000",
-        name: "前端測試帳號",
-        registrationDate: "2019-10-20",
-        birthDate: "2019-10-20"
-      },
-      {
-        onlineRegistrationNum: "1",
-        patientID: "A000000001",
-        name: "前端測試帳號",
-        registrationDate: "2019-10-20",
-        birthDate: "2019-10-20"
-      },
-      {
-        onlineRegistrationNum: "2",
-        patientID: "A000000002",
-        name: "前端測試帳號",
-        registrationDate: "2019-10-20",
-        birthDate: "2019-10-20"
-      }
-    ];
+  nextNum() {
+    console.log("nextNum");
   }
+  skipNum() {
+    console.log("skipNum");
+  }
+  getRegistrationAll() {
+    this.axios
+      .get("/registration")
+      .then(data => data.data)
+      .then(({ registrations }) => {
+        this.desserts = registrations;
+        this.loading = false;
+      })
+      .catch(data => {
+        this.$toasted.show(`資料讀取失敗，請重新整理`, {
+          type: "error",
+          position: "top-right",
+          duration: 3000
+        });
+      });
+  }
+  getCurrentRegistrationInfo() {
+    this.axios
+      .get("/registration/order")
+      .then(data => data)
+      .then(({ data }) => {
+        this.totleRegistration = data.total;
+        this.nowRegistration = data.order;
+        
+      })
+      .catch(data => {
+        this.$toasted.show(`資料讀取失敗，請重新整理`, {
+          type: "error",
+          position: "top-right",
+          duration: 3000
+        });
+      });
+  }
+  
 }
 </script>
