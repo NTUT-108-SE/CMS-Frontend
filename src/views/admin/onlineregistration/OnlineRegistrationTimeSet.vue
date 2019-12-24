@@ -43,14 +43,10 @@
                     </v-menu>
                   </v-col>
                 </v-row>
-                <v-row justify="center pb-3">
+                <v-row justify="center">
                   <v-btn class="mx-4" dark color="primary" @click="edit">
                     <v-icon left>mdi-send-check</v-icon>
                     設定
-                  </v-btn>
-                  <v-btn class="mx-4" @click="Close" dark color="red">
-                    <v-icon left>mdi-close </v-icon>
-                    關閉
                   </v-btn>
                   <v-btn class="mx-4" @click="Clear" dark color="secondary">
                     <v-icon left>mdi-autorenew</v-icon>
@@ -68,10 +64,40 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-
+import { State, Mutation } from "vuex-class";
 @Component
 export default class OnlineRegistrationTimeSet extends Vue {
+  @Mutation("Loader/setOverLay") setOverLay!: Function;
   menu2: boolean = false;
   time = null;
+  Clear() {
+    this.time = null;
+  }
+  edit() {
+    this.setOverLay(true);
+    this.axios
+      .post(
+        "/registration/time",
+        JSON.stringify({
+          time: this.time
+        })
+      )
+      .then(data => data.data)
+      .then(({ ok }) => {
+        this.$toasted.show(`設定成功`, {
+          type: "success",
+          position: "top-right",
+          duration: 3000
+        });
+        this.setOverLay(false);
+      })
+      .catch(data => {
+        this.$toasted.show(`設定失敗`, {
+          type: "error",
+          position: "top-right",
+          duration: 3000
+        });
+      });
+  }
 }
 </script>
