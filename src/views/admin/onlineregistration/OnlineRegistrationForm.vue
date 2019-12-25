@@ -226,7 +226,7 @@ export default class OnlineRegistrationForm extends Vue {
         })
         .catch(data => {
           this.setOverLay(false);
-          this.$toasted.show(`新增失敗`, {
+          this.$toasted.show(`新增失敗，請注意掛號時間`, {
             type: "error",
             position: "top-right",
             duration: 3000
