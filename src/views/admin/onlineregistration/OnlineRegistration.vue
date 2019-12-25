@@ -95,8 +95,10 @@ export default class OnlineRegistration extends Vue {
     { text: "掛號日期", value: "registrationDate" }
   ];
   private loading: Boolean = true;
+
   private totleRegistration: string = "今日掛號人數：";
   private nowRegistration: string = "目前看診進度：";
+
   private singleSelect: Boolean = false;
   private desserts: Array<Object> = [];
   process() {
@@ -132,56 +134,7 @@ export default class OnlineRegistration extends Vue {
     this.getCurrentRegistrationInfo();
     this.getRegistrationAll();
   }
-  nextNum() {
-    if (confirm("確定要跳到下一個號碼嗎?")) {
-      this.setOverLay(true);
-
-      this.axios
-        .get("/registration/next")
-        .then(data => data.data)
-        .then(({ registrations }) => {
-          this.getRegistrationAll();
-          this.$toasted.show(`跳號成功`, {
-            type: "success",
-            position: "top-right",
-            duration: 3000
-          });
-          this.setOverLay(false);
-        })
-        .catch(data => {
-          this.$toasted.show(`跳號失敗請重新跳號`, {
-            type: "error",
-            position: "top-right",
-            duration: 3000
-          });
-        });
-    }
-  }
-  skipNum() {
-    if (confirm("確定要過號嗎?")) {
-      this.setOverLay(true);
-
-      this.axios
-        .get("/skip")
-        .then(data => data.data)
-        .then(({ registrations }) => {
-          this.getRegistrationAll();
-          this.$toasted.show(`跳號成功`, {
-            type: "success",
-            position: "top-right",
-            duration: 3000
-          });
-          this.setOverLay(false);
-        })
-        .catch(data => {
-          this.$toasted.show(`跳號失敗請重新跳號`, {
-            type: "error",
-            position: "top-right",
-            duration: 3000
-          });
-        });
-    }
-  }
+  
   getRegistrationAll() {
     this.axios
       .get("/registration")
@@ -203,6 +156,7 @@ export default class OnlineRegistration extends Vue {
       .get("/registration/order")
       .then(data => data)
       .then(({ data }) => {
+
         this.totleRegistration += data.total;
         this.nowRegistration += data.order;
       })
@@ -214,5 +168,6 @@ export default class OnlineRegistration extends Vue {
         });
       });
   }
+  
 }
 </script>

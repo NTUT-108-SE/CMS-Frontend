@@ -8,19 +8,13 @@
 
     <v-row>
       <v-card-text class="py-2 px-6">
-        看診醫生： {{ registrationInfoContent.doctorName }}
-      </v-card-text>
-    </v-row>
-
-    <v-row>
-      <v-card-text class="py-2 px-6">
-        今日掛號人數： {{ registrationInfoContent.totleRegistration }}
+        今日掛號人數： {{ totleRegistration }}
       </v-card-text>
     </v-row>
 
     <v-row>
       <v-card-text class="py-2 px-6 pb-4">
-        目前看診進度： {{ registrationInfoContent.nowRegistration }}
+        目前看診進度： {{ currentRegistration }}
       </v-card-text>
     </v-row>
   </div>
@@ -31,10 +25,21 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component
 export default class RegistrationInfo extends Vue {
-  registrationInfoContent: Object = {
-    doctorName: "黃俊凱",
-    totleRegistration: 87,
-    nowRegistration: 78
-  };
+  totleRegistration: string = "";
+  currentRegistration: string = "";
+
+  created() {
+    this.getClinicRegistrationInfo();
+  }
+
+  getClinicRegistrationInfo() {
+    this.axios
+      .get("/registration/order")
+      .then(data => data)
+      .then(({ data }) => {
+        this.totleRegistration = data.total;
+        this.currentRegistration = data.order;
+      });
+  }
 }
 </script>
