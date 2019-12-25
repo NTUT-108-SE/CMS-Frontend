@@ -96,8 +96,8 @@ export default class OnlineRegistration extends Vue {
   ];
   private loading: Boolean = true;
 
-  private totleRegistration: string = "今日掛號人數：";
-  private nowRegistration: string = "目前看診進度：";
+  private totleRegistration: string = "";
+  private nowRegistration: string = "";
 
   private singleSelect: Boolean = false;
   private desserts: Array<Object> = [];
@@ -134,7 +134,6 @@ export default class OnlineRegistration extends Vue {
     }
   }
   created() {
-    this.getCurrentRegistrationInfo();
     this.getRegistrationAll();
   }
 
@@ -143,6 +142,7 @@ export default class OnlineRegistration extends Vue {
       .get("/registration")
       .then(data => data.data)
       .then(({ registrations }) => {
+        this.getCurrentRegistrationInfo();
         this.desserts = registrations;
         this.loading = false;
       })
@@ -159,8 +159,8 @@ export default class OnlineRegistration extends Vue {
       .get("/registration/order")
       .then(data => data)
       .then(({ data }) => {
-        this.totleRegistration += data.total;
-        this.nowRegistration += data.order;
+        this.totleRegistration = "今日掛號人數：" + data.total;
+        this.nowRegistration = "目前看診進度：" + data.order;
       })
       .catch(data => {
         this.$toasted.show(`資料讀取失敗，請重新整理`, {
