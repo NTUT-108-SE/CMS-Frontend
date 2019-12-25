@@ -280,7 +280,7 @@ export default class Registration extends Vue {
   }
 
   searchUserRegistrationInfo() {
-    var api = "/registration?identifier=" + this.identify;
+    var api = "/registration/identifier?identifier=" + this.identify;
     this.axios
       .get(api)
       .then(data => data.data)

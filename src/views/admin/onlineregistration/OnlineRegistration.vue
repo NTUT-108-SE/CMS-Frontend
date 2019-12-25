@@ -101,29 +101,32 @@ export default class OnlineRegistration extends Vue {
 
   private singleSelect: Boolean = false;
   private desserts: Array<Object> = [];
+  getCurrentRegistrationAddDate() {
+    var tzoffset = new Date().getTimezoneOffset() * 60000;
+    this.desserts = [];
+    this.loading = true;
+    var currentDate = new Date(Date.now() - tzoffset)
+      .toISOString()
+      .substr(0, 10);
+    var api = "/registration?date=" + currentDate;
+    this.axios
+      .get(api)
+      .then(data => data.data)
+      .then(({ registrations }) => {
+        this.desserts = registrations;
+        this.loading = false;
+      })
+      .catch(data => {
+        this.$toasted.show(`資料讀取失敗，請重新整理`, {
+          type: "error",
+          position: "top-right",
+          duration: 3000
+        });
+      });
+  }
   process() {
     if (this.singleSelect) {
-      var tzoffset = new Date().getTimezoneOffset() * 60000;
-      this.desserts = [];
-      this.loading = true;
-      var currentDate = new Date(Date.now() - tzoffset)
-        .toISOString()
-        .substr(0, 10);
-      var api = "/registration?date=" + currentDate;
-      this.axios
-        .get(api)
-        .then(data => data.data)
-        .then(({ registrations }) => {
-          this.desserts = registrations;
-          this.loading = false;
-        })
-        .catch(data => {
-          this.$toasted.show(`資料讀取失敗，請重新整理`, {
-            type: "error",
-            position: "top-right",
-            duration: 3000
-          });
-        });
+      this.getCurrentRegistrationAddDate();
     } else {
       this.desserts = [];
       this.loading = true;
@@ -174,7 +177,11 @@ export default class OnlineRegistration extends Vue {
         .get("/registration/next")
         .then(data => data.data)
         .then(({ registrations }) => {
-          this.desserts.splice(0, 1);
+          if (this.singleSelect) {
+            this.getCurrentRegistrationAddDate();
+          } else {
+            this.getRegistrationAll();
+          }
           this.$toasted.show(`跳號成功`, {
             type: "success",
             position: "top-right",
@@ -195,10 +202,15 @@ export default class OnlineRegistration extends Vue {
     if (confirm("確定要過號嗎?")) {
       this.setOverLay(true);
       this.axios
-        .get("/skip")
+        .get("/registration/skip")
         .then(data => data.data)
         .then(({ registrations }) => {
-          this.getRegistrationAll();
+          if (this.singleSelect) {
+            this.getCurrentRegistrationAddDate();
+          } else {
+            this.getRegistrationAll();
+          }
+
           this.$toasted.show(`跳號成功`, {
             type: "success",
             position: "top-right",
