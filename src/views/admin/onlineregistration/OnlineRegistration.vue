@@ -9,12 +9,20 @@
           <v-divider class="mx-4"></v-divider>
           <v-row>
             <v-card-text class="py-2 px-6">
-              今日掛號人數： {{ totleRegistration }}
+              <v-text-field
+                v-model="totleRegistration"
+                :disabled="true"
+                color="primary"
+              ></v-text-field>
             </v-card-text>
           </v-row>
           <v-row>
             <v-card-text class="py-2 px-6 pb-4">
-              目前看診進度： {{ nowRegistration }}
+              <v-text-field
+                v-model="nowRegistration"
+                :disabled="true"
+                color="primary"
+              ></v-text-field>
             </v-card-text>
           </v-row>
           <v-divider class="mx-4"></v-divider>
@@ -74,9 +82,10 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-
+import { State, Mutation } from "vuex-class";
 @Component
 export default class OnlineRegistration extends Vue {
+  @Mutation("Loader/setOverLay") setOverLay!: Function;
   private search: string = "";
   private headers: Object = [
     { text: "掛號順序", value: "order" },
@@ -86,8 +95,10 @@ export default class OnlineRegistration extends Vue {
     { text: "掛號日期", value: "registrationDate" }
   ];
   private loading: Boolean = true;
-  private totleRegistration: string = "";
-  private nowRegistration: string = "";
+
+  private totleRegistration: string = "今日掛號人數：";
+  private nowRegistration: string = "目前看診進度：";
+
   private singleSelect: Boolean = false;
   private desserts: Array<Object> = [];
   process() {
@@ -123,12 +134,7 @@ export default class OnlineRegistration extends Vue {
     this.getCurrentRegistrationInfo();
     this.getRegistrationAll();
   }
-  nextNum() {
-    console.log("nextNum");
-  }
-  skipNum() {
-    console.log("skipNum");
-  }
+  
   getRegistrationAll() {
     this.axios
       .get("/registration")
@@ -150,9 +156,9 @@ export default class OnlineRegistration extends Vue {
       .get("/registration/order")
       .then(data => data)
       .then(({ data }) => {
-        this.totleRegistration = data.total;
-        this.nowRegistration = data.order;
-        
+
+        this.totleRegistration += data.total;
+        this.nowRegistration += data.order;
       })
       .catch(data => {
         this.$toasted.show(`資料讀取失敗，請重新整理`, {
