@@ -208,10 +208,14 @@ export default class WebDesign extends Vue {
         this.title = management.title;
         this.images = management.images;
         this.urls = management.URLs;
-        this.clinicIntroduction = management.ourServices;
-        this.indications = management.description;
-        this.doctorIntroduction = management.doctorDescription;
-        this.clinicLocation = management.clinicAddress;
+        this.clinicIntroduction = this.formatingToString(
+          management.ourServices
+        );
+        this.indications = this.formatingToString(management.description);
+        this.doctorIntroduction = this.formatingToString(
+          management.doctorDescription
+        );
+        this.clinicLocation = this.formatingToString(management.clinicAddress);
       })
       .catch(data => {
         this.$toasted.show(`資料讀取失敗，請重新登入`, {
@@ -275,11 +279,23 @@ export default class WebDesign extends Vue {
       time: new Date().toISOString().substr(0, 10),
       images: this.images,
       URLs: this.urls,
-      ourServices: this.clinicIntroduction,
-      description: this.indications,
-      doctorDescription: this.doctorIntroduction,
-      clinicAddress: this.clinicLocation
+      ourServices: this.formatingContext(this.clinicIntroduction),
+      description: this.formatingContext(this.indications),
+      doctorDescription: this.formatingContext(this.doctorIntroduction),
+      clinicAddress: this.formatingContext(this.clinicLocation)
     });
+  }
+
+  formatingContext(originalContext: any): string {
+    var formatedContext = "";
+    formatedContext = originalContext.replace("\n", "<br />");
+    return formatedContext;
+  }
+
+  formatingToString(originalContext: any): string {
+    var formatedContext = "";
+    formatedContext = originalContext.replace("<br />", "\n");
+    return formatedContext;
   }
 }
 </script>

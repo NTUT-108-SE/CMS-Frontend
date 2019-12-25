@@ -6,7 +6,15 @@ import { WebSettingState } from "./types";
 import { RootState } from "@/store/types";
 
 export const state: WebSettingState = {
-  webSetting: undefined,
+  webSetting: {
+    URLs: [{}, {}, {}, {}],
+    images: [{}, {}, {}, {}],
+    clinicAddress: "",
+    description: "",
+    doctorDescription: "",
+    ourServices: "",
+    title: ""
+  },
   isEmpty: true
 };
 
