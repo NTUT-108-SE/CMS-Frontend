@@ -125,7 +125,7 @@ export default class BulletinForm extends Vue {
   getShowData() {
     this.setOverLay(true);
     this.bulletinTitle = this.bulletinInfo.title;
-    this.bulletinContent = this.bulletinInfo.context;
+    this.bulletinContent = this.formatingToString(this.bulletinInfo.context);
     this.setOverLay(false);
   }
 
@@ -202,10 +202,22 @@ export default class BulletinForm extends Vue {
   getBullentinInfo(): string {
     return JSON.stringify({
       title: this.bulletinTitle,
-      context: this.bulletinContent,
+      context: this.formatingContext(this.bulletinContent),
       author: this.user.name,
       date: new Date().toISOString().substr(0, 10)
     });
+  }
+
+  formatingContext(originalContext: any): string {
+    var formatedContext = "";
+    formatedContext = originalContext.replace("\n", "<br />");
+    return formatedContext;
+  }
+
+  formatingToString(originalContext: any): string {
+    var formatedContext = "";
+    formatedContext = originalContext.replace("<br />", "\n");
+    return formatedContext;
   }
 }
 </script>
