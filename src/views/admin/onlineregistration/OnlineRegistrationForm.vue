@@ -17,7 +17,9 @@
                       v-model="identifier"
                       :rules="[
                         () => !!identifier || '必須填入',
-                        () => identifier.length == 10 || '身分證必須是10個字元'
+                        () =>
+                          checkTaiwanID() ||
+                          '身分證必須是10個字元且不符合台灣規則'
                       ]"
                       clearable
                       dense
@@ -161,6 +163,53 @@ export default class OnlineRegistrationForm extends Vue {
   action: string = "add";
   private valid: Boolean = true;
   private controlbirthDateActive: Boolean = false;
+  checkTaiwanID() {
+    var reg = /^[A-Z]{1}[1-2]{1}[0-9]{8}$/; //身份證的正規表示式
+    if (reg.test(this.identifier)) {
+      var englishAlphabetBasicTable = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      var conversionTaiwanNum = [
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "34",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "35",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "32",
+        "30",
+        "31",
+        "33"
+      ];
+      var findIDFirstAlphabet = englishAlphabetBasicTable.indexOf(
+        this.identifier.charAt(0)
+      );
+      var tempuserid =
+        conversionTaiwanNum[findIDFirstAlphabet] + this.identifier.substr(1, 9); //若此身份證號若是A123456789=>10123456789
+      var num = Number(tempuserid.charAt(0)) * 1;
+      for (var i = 1; i <= 9; i++) {
+        num += Number(tempuserid.charAt(i)) * (10 - i);
+      }
+      num += Number(tempuserid.charAt(10)) * 1;
+      if (num % 10 == 0) return true;
+      return false;
+    }
+    return false;
+  }
   data() {
     return {
       birthDate: "",
